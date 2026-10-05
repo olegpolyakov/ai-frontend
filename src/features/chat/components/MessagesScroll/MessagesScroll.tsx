@@ -1,0 +1,73 @@
+import { type ReactNode, useEffect, useRef } from 'react';
+
+import { Scrollable } from '@olegpolyakov/ui';
+
+import type { Message } from '../../types';
+
+import styles from './MessagesScroll.module.scss';
+
+export default function MessagesScroll({
+    messages,
+    initialMessageId,
+    children
+}: {
+    messages: Message[];
+    initialMessageId?: string;
+    children: ReactNode | ReactNode[];
+}) {
+    const elementRef = useRef<HTMLDivElement>(null);
+    const bottomRef = useRef<HTMLDivElement>(null);
+
+    // On initial load scroll to the bottom after all images are loaded
+    useEffect(() => {
+        if (!elementRef.current || !bottomRef.current) return;
+
+        // Картинки приходят из markdown и меняют высоту ленты уже после рендера.
+        const images = elementRef.current.querySelectorAll('img');
+        const unloadedImages = [...images].filter(image => !image.complete);
+
+        Promise.all(
+            unloadedImages.map(
+                image =>
+                    new Promise<void>((resolve, reject) => {
+                        image.onload = () => resolve();
+                        image.onerror = () => reject();
+                    })
+            )
+        ).finally(() => {
+            if (initialMessageId) {
+                elementRef.current
+                    ?.querySelector('#' + initialMessageId)
+                    ?.scrollIntoView({ block: 'center' });
+            } else {
+                bottomRef.current?.scrollIntoView();
+            }
+        });
+    }, [initialMessageId]);
+
+    // Scroll to the bottom when new messages are added
+    useEffect(() => {
+        const element = elementRef.current;
+
+        if (!element) return;
+
+        const scrollBottom = element.scrollTop + element.clientHeight;
+
+        if (scrollBottom >= element.scrollHeight) return;
+
+        bottomRef.current?.scrollIntoView();
+    }, [messages]);
+
+    return (
+        <Scrollable fade>
+            <div ref={elementRef}>
+                {children}
+
+                <div
+                    ref={bottomRef}
+                    className={styles.bottom}
+                />
+            </div>
+        </Scrollable>
+    );
+}

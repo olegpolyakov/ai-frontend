@@ -1,0 +1,14 @@
+@use 'pkg:@olegpolyakov/ui';
+@use 'pkg:@olegpolyakov/ui/styles';
+@use 'pkg:highlight.js/scss/github-dark';
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: none;
+}
+
+#root {
+    height: 100%;
+}

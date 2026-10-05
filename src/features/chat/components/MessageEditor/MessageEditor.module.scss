@@ -1,0 +1,12 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ui-s-xs, 4px);
+    min-width: 240px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--ui-s-xs, 4px);
+}

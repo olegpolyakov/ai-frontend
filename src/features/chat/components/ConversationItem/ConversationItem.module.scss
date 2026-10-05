@@ -1,0 +1,29 @@
+.root {
+    overflow: hidden;
+    text-decoration: none;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--ui-space-xxs);
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ui-space-xs);
+    min-width: 0;
+}
+
+.subtitle {
+    min-width: 0;
+}
+
+.row .unread {
+    margin-left: auto;
+}

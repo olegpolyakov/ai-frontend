@@ -1,0 +1,9 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ui-space-xs);
+}
+
+.list {
+    gap: var(--ui-space-xs);
+}
