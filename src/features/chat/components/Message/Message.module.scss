@@ -62,14 +62,18 @@
 
     p {
         margin: 0;
-
-        & + & {
-            margin-top: var(--ui-space-s);
-        }
     }
 
-    ol, ul {
+    p + p {
+        margin-top: var(--ui-space-s);
+    }
+
+    p, ol, ul {
         line-height: 1.5;
+    }
+
+    code {
+        font-size: 14px;
     }
 }
 

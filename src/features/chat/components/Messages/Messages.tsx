@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 
-import { Text } from '@olegpolyakov/ui';
+import { Text, Scrollable } from '@olegpolyakov/ui';
 
 import { getMessagesByDate } from '../../helpers';
 import type { Message } from '../../types';
@@ -22,34 +22,36 @@ export default function Messages({
 
     return (
         <div className={styles.root}>
-            <MessagesScroll
-                messages={messages}
-                initialMessageId={initialMessageId}
-            >
-                <div className={styles.list}>
-                    {Object.entries(messagesByDate).map(
-                        ([date, messages]) => (
-                            <Fragment key={date}>
-                                <SystemText content={date} />
+            <Scrollable fade>
+                <MessagesScroll
+                    messages={messages}
+                    initialMessageId={initialMessageId}
+                >
+                    <div className={styles.list}>
+                        {Object.entries(messagesByDate).map(
+                            ([date, messages]) => (
+                                <Fragment key={date}>
+                                    <SystemText content={date} />
 
-                                {messages.map(message => (
-                                    <Fragment key={message.id}>
-                                        {message.isFirstIsNew && (
-                                            <SystemText content="Новые сообщения" />
-                                        )}
+                                    {messages.map(message => (
+                                        <Fragment key={message.id}>
+                                            {message.isFirstIsNew && (
+                                                <SystemText content="Новые сообщения" />
+                                            )}
 
-                                        {message.role === 'system' ? (
-                                            <SystemText content={message.content} />
-                                        ) : (
-                                            <MessageComponent message={message} />
-                                        )}
-                                    </Fragment>
-                                ))}
-                            </Fragment>
-                        )
-                    )}
-                </div>
-            </MessagesScroll>
+                                            {message.role === 'system' ? (
+                                                <SystemText content={message.content} />
+                                            ) : (
+                                                <MessageComponent message={message} />
+                                            )}
+                                        </Fragment>
+                                    ))}
+                                </Fragment>
+                            )
+                        )}
+                    </div>
+                </MessagesScroll>
+            </Scrollable>
         </div>
     );
 }

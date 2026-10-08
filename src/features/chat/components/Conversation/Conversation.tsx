@@ -1,4 +1,6 @@
-import { Avatar, Heading, Spinner, State, Text } from '@olegpolyakov/ui';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { Avatar, Button, Heading, Spinner, State, Text } from '@olegpolyakov/ui';
 import Editable from '@olegpolyakov/frontend/components/Editable';
 
 import useConversation from '../../hooks/useConversation';
@@ -7,14 +9,17 @@ import Messages from '../Messages';
 
 import styles from './Conversation.module.scss';
 
-export default function Conversation({
-    conversationId = '',
-    messageId
-}: {
-    conversationId?: string;
-    messageId?: string;
-}) {
-    const { conversation, messages, isLoading, sendMessage } = useConversation(conversationId);
+export default function Conversation() {
+    const { conversationId = '', messageId = '' } = useParams<{ conversationId: string; messageId?: string }>();
+    const {
+        conversation,
+        messages,
+        isLoading,
+        sendMessage,
+        updateConversation,
+        deleteConversation
+    } = useConversation(conversationId);
+    const navigate = useNavigate();
 
     if (!conversation) return (
         <State title="Такого чата нет" />
@@ -28,7 +33,12 @@ export default function Conversation({
                 <div className={styles.text}>
                     <Heading
                         content={
-                            <Editable content={conversation.title} />
+                            <Editable
+                                content={conversation.title}
+                                onBlur={title => updateConversation(conversation.id, {
+                                    title
+                                })}
+                            />
                         }
                     />
 
@@ -40,6 +50,19 @@ export default function Conversation({
                         />
                     )}
                 </div>
+
+                <Button
+                    className={styles.deleteButton}
+                    title="Delete conversation"
+                    icon="delete"
+                    color="danger"
+                    onClick={() => {
+                        if (confirm('Are you sure you want to delete this conversation?')) {
+                            deleteConversation(conversation.id);
+                            navigate('/');
+                        }
+                    }}
+                />
             </header>
 
             <div className={styles.body}>

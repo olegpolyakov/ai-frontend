@@ -7,6 +7,9 @@ export type Chat = {
     isLoadingConversations: boolean;
     activeConversation?: Conversation;
     setActiveConversation: (conversationId: string) => void;
+    createConversation: (title: string) => Promise<Conversation>;
+    updateConversation: (conversationId: string, data: { title?: string, description?: string }) => Promise<Conversation>;
+    deleteConversation: (conversationId: string) => Promise<void>;
 
     messages: Message[];
     isLoadingMessages: boolean;

@@ -6,7 +6,7 @@ import type {
     Conversation,
     Message,
     Messages
-} from '../types';
+} from './types';
 
 export enum ChatEvent {
     Initialized = 'initialized',
@@ -119,8 +119,21 @@ export default class Chat extends EventEmitter {
         return data?.data;
     }
 
+    async updateConversation(conversationId: string, data: { title?: string, description?: string } = {}): Promise<Conversation> {
+        const res = await this._http.patch<{ data: Conversation }>(
+            `/conversations/${conversationId}`,
+            data
+        );
+
+        return res.data;
+    }
+
     async updateConversationLastView(conversationId: string) {
         return this._http.patch(`/conversations/${conversationId}/view`, {});
+    }
+
+    async deleteConversation(conversationId: string): Promise<void> {
+        return await this._http.delete(`/conversations/${conversationId}`);
     }
 
     async getMessages(conversationId: string, abortController?: AbortController): Promise<Message[]> {

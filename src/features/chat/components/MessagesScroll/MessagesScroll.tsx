@@ -1,7 +1,5 @@
 import { type ReactNode, useEffect, useRef } from 'react';
 
-import { Scrollable } from '@olegpolyakov/ui';
-
 import type { Message } from '../../types';
 
 import styles from './MessagesScroll.module.scss';
@@ -59,15 +57,13 @@ export default function MessagesScroll({
     }, [messages]);
 
     return (
-        <Scrollable fade>
-            <div ref={elementRef}>
-                {children}
+        <div ref={elementRef} className={styles.root}>
+            {children}
 
-                <div
-                    ref={bottomRef}
-                    className={styles.bottom}
-                />
-            </div>
-        </Scrollable>
+            <div
+                ref={bottomRef}
+                className={styles.bottom}
+            />
+        </div>
     );
 }

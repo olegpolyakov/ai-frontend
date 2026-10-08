@@ -11,9 +11,11 @@ export default function useConversation(id: string) {
             isLoadingConversations,
             activeConversation,
             setActiveConversation,
+            updateConversation,
+            deleteConversation,
             messages,
             isLoadingMessages,
-            sendMessage
+            sendMessage,
         }
     } = useChatContext();
 
@@ -29,6 +31,8 @@ export default function useConversation(id: string) {
         conversation: activeConversation,
         messages: enrichMessages(messages, activeConversation?.viewedAt, userId),
         isLoading: isLoadingConversations || isLoadingMessages,
-        sendMessage
+        sendMessage,
+        updateConversation,
+        deleteConversation,
     };
 }

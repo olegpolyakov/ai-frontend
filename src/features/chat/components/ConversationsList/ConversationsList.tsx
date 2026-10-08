@@ -1,4 +1,6 @@
-import { List, Spinner, State } from '@olegpolyakov/ui';
+import { useNavigate } from 'react-router-dom';
+
+import { Button, List, Spinner } from '@olegpolyakov/ui';
 
 import useChatContext from '../../hooks/useChatContext';
 import ConversationItem from '../ConversationItem';
@@ -6,11 +8,15 @@ import ConversationItem from '../ConversationItem';
 import styles from './ConversationsList.module.scss';
 
 export default function ConversationsList() {
-    const { chat: { conversations, activeConversation } } = useChatContext();
+    const { chat: { conversations, activeConversation, createConversation } } = useChatContext();
+    const navigate = useNavigate();
 
     if (!conversations) return <Spinner />;
 
-    if (!conversations?.length) return <State title="Нет чатов" />;
+    const handleCreate = async () => {
+        const conversation = await createConversation('New Conversation');
+        navigate(`/${conversation.id}`);
+    };
 
     return (
         <div className={styles.root}>
@@ -27,6 +33,11 @@ export default function ConversationsList() {
                     />
                 ))}
             </List>
+
+            <Button
+                content="New Conversation"
+                onClick={handleCreate}
+            />
         </div>
     );
 }

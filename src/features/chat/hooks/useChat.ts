@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { HttpClient } from '@olegpolyakov/frontend/clients/http';
 import { WsClient } from '@olegpolyakov/frontend/clients/ws';
 
-import Chat, { ChatEvent, ChatOptions, ChatState } from '../lib/Chat';
+import Chat, { ChatEvent, ChatOptions, ChatState } from '../Chat';
 import type { Conversation, Message } from '../types';
 
 export default function useChat(options: ChatOptions) {
@@ -32,12 +32,6 @@ export default function useChat(options: ChatOptions) {
         setMessages([]);
     }, []);
 
-    const createConversation = useCallback(async (title: string) => {
-        const conversation = await chatRef.current!.createConversation(title);
-        setConversations(prev => [...prev, conversation]);
-        return conversation;
-    }, []);
-
     const getConversations = useCallback(() => {
         setLoadingConversations(true);
 
@@ -59,6 +53,23 @@ export default function useChat(options: ChatOptions) {
                 }
             })
             .finally(() => setLoadingConversations(false));
+    }, []);
+
+    const createConversation = useCallback(async (title: string) => {
+        const conversation = await chatRef.current!.createConversation(title);
+        setConversations(prev => [...prev, conversation]);
+        return conversation;
+    }, []);
+
+    const updateConversation = useCallback(async (conversationId: string, data: { title?: string, description?: string } = {}) => {
+        const conversation = await chatRef.current!.updateConversation(conversationId, data);
+        setConversations(prev => prev.map(c => c.id === conversation.id ? conversation : c));
+        return conversation;
+    }, []);
+
+    const deleteConversation = useCallback(async (conversationId: string) => {
+        await chatRef.current!.deleteConversation(conversationId);
+        setConversations(prev => prev.filter(c => c.id !== conversationId));
     }, []);
 
     const getMessages = useCallback((conversationId: string) => {
@@ -255,9 +266,11 @@ export default function useChat(options: ChatOptions) {
 
         conversations,
         isLoadingConversations,
-        createConversation,
         activeConversation,
         setActiveConversation,
+        createConversation,
+        updateConversation,
+        deleteConversation,
 
         messages,
         isLoadingMessages,
