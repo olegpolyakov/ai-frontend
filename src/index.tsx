@@ -1,3 +1,5 @@
+/// <reference types="@olegpolyakov/frontend" />
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
