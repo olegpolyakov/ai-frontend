@@ -65,21 +65,6 @@ export default function Message({ message }: {
                             size="xs"
                         />
                     )} */}
-
-                    <Text
-                        className={styles.datetime}
-                        content={message.timeString}
-                        color="tertiary"
-                        size="xs"
-                    />
-
-                    {!isEditing && message.editedAt && (
-                        <Text
-                            className={styles.edited}
-                            content="Изменено"
-                            size="xs"
-                        />
-                    )}
                 </div>
 
                 <div className={styles.body}>
@@ -93,12 +78,35 @@ export default function Message({ message }: {
 
                     <MessageImages images={message.images} />
 
-                    <MessageFiles files={message.files} isMine={message.isMine} />
+                    <MessageFiles
+                        files={message.files}
+                        isMine={message.isMine}
+                    />
                 </div>
 
-                {message.isMine && !isEditing && (
+                {!isEditing && (
                     <div className={styles.footer}>
-                        <MessageMenu message={message} onEdit={handleEdit} />
+                        <Text
+                            className={styles.datetime}
+                            content={message.timeString}
+                            color="tertiary"
+                            size="xs"
+                        />
+
+                        {!isEditing && message.editedAt && (
+                            <Text
+                                className={styles.edited}
+                                content="Edited"
+                                size="xs"
+                            />
+                        )}
+                    
+                        {message.isMine &&
+                            <MessageMenu
+                                message={message}
+                                onEdit={handleEdit}
+                            />
+                        }
                     </div>
                 )}
             </Item>
