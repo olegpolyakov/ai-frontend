@@ -6,13 +6,16 @@
         "build": "vite build",
         "dev": "vite dev",
         "compile": "tsc --noEmit",
-        "lint": "eslint ./src ./demo",
+        "lint": "eslint ./src",
         "preversion": "rm -f package-lock.json && npm install --workspaces=false && git add package-lock.json",
         "postversion": "git tag $npm_package_version && git push origin $npm_package_version && rm -rf node_modules"
     },
     "dependencies": {
         "@olegpolyakov/frontend": "^0.23.0",
-        "@olegpolyakov/ui": "^0.11.0"
+        "@olegpolyakov/ui": "^0.11.0",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0",
+        "react-router-dom": "^7.13.0"
     },
     "devDependencies": {
         "@types/react": "^19.2.0",
