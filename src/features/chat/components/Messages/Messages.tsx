@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 
-import { Text, Scrollable } from '@olegpolyakov/ui';
+import { Scrollable, Text } from '@olegpolyakov/ui';
 
 import { getMessagesByDate } from '../../helpers';
 import type { Message } from '../../types';

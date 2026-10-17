@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { Avatar, Item, Text } from '@olegpolyakov/ui';
+import { Item, Text } from '@olegpolyakov/ui';
 import cn from '@olegpolyakov/frontend/helpers/classnames';
 
 import useChatContext from '../../hooks/useChatContext';

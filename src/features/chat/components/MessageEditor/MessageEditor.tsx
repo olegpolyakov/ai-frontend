@@ -58,7 +58,7 @@ export default function MessageEditor({
                 // minRows={1}
                 // maxRows={8}
                 autoFocus
-                onChange={({value}) => setValue(value!)}
+                onChange={({ value }) => setValue(value!)}
                 onKeyDown={handleKeyDown}
             />
 
@@ -67,7 +67,12 @@ export default function MessageEditor({
                     content="Не удалось изменить сообщение. Попробуйте снова"
                     color="danger"
                     size="xs"
-                    start={<Icon name="error" size="s" />}
+                    start={
+                        <Icon
+                            name="error"
+                            size="s"
+                        />
+                    }
                 />
             )}
 

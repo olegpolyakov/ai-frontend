@@ -20,7 +20,7 @@ export default function MessagesScroll({
     useEffect(() => {
         if (!elementRef.current || !bottomRef.current) return;
 
-        // Картинки приходят из markdown и меняют высоту ленты уже после рендера.
+        // Scroll to the bottom after all images are loaded
         const images = elementRef.current.querySelectorAll('img');
         const unloadedImages = [...images].filter(image => !image.complete);
 
@@ -57,7 +57,10 @@ export default function MessagesScroll({
     }, [messages]);
 
     return (
-        <div ref={elementRef} className={styles.root}>
+        <div
+            ref={elementRef}
+            className={styles.root}
+        >
             {children}
 
             <div

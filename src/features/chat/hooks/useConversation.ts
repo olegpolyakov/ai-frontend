@@ -15,7 +15,7 @@ export default function useConversation(id: string) {
             deleteConversation,
             messages,
             isLoadingMessages,
-            sendMessage,
+            sendMessage
         }
     } = useChatContext();
 
@@ -33,6 +33,6 @@ export default function useConversation(id: string) {
         isLoading: isLoadingConversations || isLoadingMessages,
         sendMessage,
         updateConversation,
-        deleteConversation,
+        deleteConversation
     };
 }

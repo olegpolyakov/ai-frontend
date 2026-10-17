@@ -6,8 +6,7 @@ type DateInput = number | string | Date | DateTime;
 
 export function enrichMessages(
     messages: Message[] = [],
-    lastMessageViewedAt?: string,
-    userId?: string
+    lastMessageViewedAt?: string
 ): Message[] {
     let oldIsNew: boolean | null = null;
 

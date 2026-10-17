@@ -174,7 +174,10 @@ export default function MessageForm({
                                     shape="rounded-m"
                                     variant="outlined"
                                 >
-                                    <Flex column gap="xxs">
+                                    <Flex
+                                        column
+                                        gap="xxs"
+                                    >
                                         <Text
                                             content={file.name}
                                             size="s"
@@ -209,7 +212,10 @@ export default function MessageForm({
                             content="Ошибка отправки сообщения. Попробуйте снова"
                             color="danger"
                             size="xs"
-                            start={<Icon name="error" size="s" />}
+                            start={<Icon
+                                name="error"
+                                size="s"
+                            />}
                         />
                     )}
                 </div>

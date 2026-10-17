@@ -15,7 +15,10 @@ export default function MessageImages({ images = [] }: {
                 target="_blank"
                 rel="noopener noreferrer"
             >
-                <img src={image.url} alt="" />
+                <img
+                    src={image.url}
+                    alt=""
+                />
             </a>
         ));
 }

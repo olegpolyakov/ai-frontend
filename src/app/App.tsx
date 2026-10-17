@@ -21,7 +21,10 @@ export default function App() {
                 wsUrl={WS_URL}
             >
                 <AppDrawer scrollable={false}>
-                    <Scrollable className={styles.sidebar} fade>
+                    <Scrollable
+                        className={styles.sidebar}
+                        fade
+                    >
                         <Heading content="AI" />
                             
                         <ConversationsList />

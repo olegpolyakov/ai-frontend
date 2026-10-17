@@ -15,7 +15,10 @@ export default function MessageFiles({ files, isMine }: {
     return (
         <div className={cn(styles.root, isMine && styles.mine)}>
             {files.map(file => (
-                <div key={file.path} className={styles.file}>
+                <div
+                    key={file.path}
+                    className={styles.file}
+                >
                     <Icon name={getFileIconName(file.name)} />
 
                     <div className={styles.info}>
