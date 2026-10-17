@@ -5,7 +5,6 @@ import useChatContext from '../hooks/useChatContext';
 
 export default function useConversation(id: string) {
     const {
-        userId,
         chat: {
             conversations,
             isLoadingConversations,
@@ -29,7 +28,7 @@ export default function useConversation(id: string) {
 
     return {
         conversation: activeConversation,
-        messages: enrichMessages(messages, activeConversation?.viewedAt, userId),
+        messages: enrichMessages(messages, activeConversation?.viewedAt),
         isLoading: isLoadingConversations || isLoadingMessages,
         sendMessage,
         updateConversation,
