@@ -36,7 +36,7 @@ export default function MessagesScroll({
             if (initialMessageId) {
                 elementRef.current
                     ?.querySelector('#' + initialMessageId)
-                    ?.scrollIntoView({ block: 'center' });
+                    ?.scrollIntoView({ block: 'start' });
             } else {
                 bottomRef.current?.scrollIntoView();
             }
@@ -53,7 +53,7 @@ export default function MessagesScroll({
 
         if (scrollBottom >= element.scrollHeight) return;
 
-        bottomRef.current?.scrollIntoView();
+        bottomRef.current?.scrollIntoView({ block: 'start' });
     }, [messages]);
 
     return (
