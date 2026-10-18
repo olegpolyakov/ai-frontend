@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { Item, Text } from '@olegpolyakov/ui';
+import { Text } from '@olegpolyakov/ui';
 import cn from '@olegpolyakov/frontend/helpers/classnames';
 
 import useChatContext from '../../hooks/useChatContext';
@@ -43,20 +43,16 @@ export default function Message({ message }: {
                 />
             } */}
 
-            <Item
-                className={styles.container}
-                variant="tinted"
-                shape="rounded-m"
-            >
+            <div className={styles.container}>
                 <div className={styles.header}>
-                    {!message.isMine &&
+                    {/* {!message.isMine &&
                         <Text
                             className={styles.author}
                             content="Bot"
                             size="s"
                             color="secondary"
                         />
-                    }
+                    } */}
 
                     {/* {message.role && (
                         <Text
@@ -109,7 +105,7 @@ export default function Message({ message }: {
                         }
                     </div>
                 )}
-            </Item>
+            </div>
         </div>
     );
 }
