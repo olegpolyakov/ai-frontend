@@ -5,7 +5,8 @@
 }
 
 .sidebar {
-    width: 280px;
+    box-sizing: border-box;
+    max-width: 280px;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
