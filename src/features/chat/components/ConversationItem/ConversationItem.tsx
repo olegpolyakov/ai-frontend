@@ -1,6 +1,6 @@
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import { Avatar, Item, Pill, Text } from '@olegpolyakov/ui';
+import { Item, Pill, Text } from '@olegpolyakov/ui';
 
 import { getDateTimeString } from '../../helpers';
 import type { Conversation } from '../../types';
@@ -9,28 +9,25 @@ import styles from './ConversationItem.module.scss';
 
 export default function ConversationItem({
     conversation,
-    selected
+    selected,
+    onClick
 }: {
     conversation: Conversation;
     selected?: boolean;
+    onClick?: () => void;
 }) {
     const subtitle = conversation.lastMessage?.content.slice(0, 50) || conversation.description;
 
     return (
         <Item
             className={styles.root}
-            as={NavLink}
+            as={Link}
             to={`/${conversation.id}`}
-            start={
-                <Avatar
-                    size="s"
-                    variant="outlined"
-                />
-            }
             shape="rounded-m"
             variant="plain"
             active={selected}
             interactive
+            onClick={onClick}
         >
             <div className={styles.main}>
                 <div className={styles.row}>

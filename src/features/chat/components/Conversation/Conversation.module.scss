@@ -1,3 +1,5 @@
+@use 'pkg:@olegpolyakov/ui/styles/media';
+
 .root {
     height: 100%;
     display: flex;
@@ -12,11 +14,25 @@
     padding: var(--ui-space-s);
 }
 
+.text {
+    flex: 1;
+    overflow: hidden;
+}
+
+.menu {
+    flex-shrink: 0;
+
+    @include media.from(m) {
+        display: none;
+    }
+}
+
 .body {
     flex: 1;
     overflow: hidden;
 }
 
-.deleteButton {
+.more {
+    flex-shrink: 0;
     margin-left: auto;
 }

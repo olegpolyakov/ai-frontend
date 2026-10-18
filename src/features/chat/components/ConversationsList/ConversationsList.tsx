@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import { Button, List, Spinner } from '@olegpolyakov/ui';
+import { useAppContext } from '@olegpolyakov/frontend/app';
 
 import useChatContext from '../../hooks/useChatContext';
 import ConversationItem from '../ConversationItem';
@@ -9,6 +10,7 @@ import styles from './ConversationsList.module.scss';
 
 export default function ConversationsList() {
     const { chat: { conversations, activeConversation, createConversation } } = useChatContext();
+    const { closeDrawer } = useAppContext();
     const navigate = useNavigate();
 
     if (!conversations) return <Spinner />;
@@ -30,12 +32,14 @@ export default function ConversationsList() {
                         key={conversation.id}
                         conversation={conversation}
                         selected={conversation.id === activeConversation?.id}
+                        onClick={closeDrawer}
                     />
                 ))}
             </List>
 
             <Button
                 content="New Conversation"
+                variant="tinted"
                 onClick={handleCreate}
             />
         </div>
