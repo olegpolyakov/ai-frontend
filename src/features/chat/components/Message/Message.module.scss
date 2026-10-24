@@ -33,6 +33,7 @@
 }
 
 .body {
+    box-sizing: border-box;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -106,7 +107,7 @@
 
     .body {
         border-radius: var(--ui-radius-m);
-        padding: var(--ui-space-xs);
+        padding: var(--ui-space-xxs) var(--ui-space-xs);
         background-color: var(--ui-tinted-color);
     }
 }
