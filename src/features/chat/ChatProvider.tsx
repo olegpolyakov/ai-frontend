@@ -1,11 +1,13 @@
 import { useMemo } from 'react';
 
-import { State } from '@olegpolyakov/ui';
+import { Icon, Screen, Spinner, State } from '@olegpolyakov/ui';
 
 import ChatContext, { type ChatContextValue } from './ChatContext';
-import useChat from './hooks/useChat';
+import useChatApi from './hooks/useChatApi';
+import useChatClient from './hooks/useChatClient';
 
-export default function ChatProvider({ accessToken,
+export default function ChatProvider({
+    accessToken,
     userId,
     apiUrl,
     wsUrl,
@@ -17,15 +19,38 @@ export default function ChatProvider({ accessToken,
     wsUrl: string;
     children: React.ReactNode;
 }) {
-    const chat = useChat({ accessToken, apiUrl, wsUrl });
+    const api = useChatApi(apiUrl, accessToken);
+    const { client, error, isConnected } = useChatClient(wsUrl, accessToken);
 
-    const value = useMemo<ChatContextValue>(() => ({ chat, userId }), [chat, userId]);
+    const value = useMemo<ChatContextValue>(() => ({
+        api,
+        client,
+        userId
+    }), [
+        api,
+        client,
+        userId
+    ]);
 
-    if (chat.error) return (
-        <State
-            title="Произошла ошибка"
-            description={chat.error.message}
-        />
+    if (error) return (
+        <Screen full>
+            <State
+                image={
+                    <Icon
+                        name="error"
+                        size="xl"
+                    />
+                }
+                title="Chat Error"
+                description={error?.message}
+            />
+        </Screen>
+    );
+
+    if (!client || !isConnected) return (
+        <Screen full>
+            <State image={<Spinner size="l" />} />
+        </Screen>
     );
     
     return (

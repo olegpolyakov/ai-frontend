@@ -1,36 +1,44 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
-import { enrichMessages } from '../helpers';
+import { useRequest } from '@olegpolyakov/frontend/hooks/request';
+
 import useChatContext from '../hooks/useChatContext';
 
+import useConversationsContext from './useConversationsContext';
+
 export default function useConversation(id: string) {
+    const { api } = useChatContext();
     const {
-        chat: {
-            conversations,
-            isLoadingConversations,
-            activeConversation,
-            setActiveConversation,
-            updateConversation,
-            deleteConversation,
-            messages,
-            isLoadingMessages,
-            sendMessage
-        }
-    } = useChatContext();
+        conversations,
+        updateConversation: _updateConversation,
+        deleteConversation: _deleteConversation,
+        setActiveConversationId
+    } = useConversationsContext();
+
+    const conversation = useMemo(() => conversations.find(c => c.id === id), [conversations, id]);
 
     useEffect(() => {
-        if (activeConversation?.id === id) return;
+        setActiveConversationId(id);
+    }, [id, api, setActiveConversationId]);
 
-        if (conversations?.some(conversation => conversation.id === id)) {
-            setActiveConversation(id);
-        }
-    }, [id, activeConversation, conversations, setActiveConversation]);
+    const updateConversationLastView = useCallback(async (signal: AbortSignal) => {
+        return api.updateConversationLastView(id, { signal });
+    }, [id, api]);
+
+    const { isLoading, error } = useRequest(updateConversationLastView);
+
+    const updateConversation = useCallback(async (data: { title?: string, description?: string } = {}) => {
+        return _updateConversation(id, data);;
+    }, [id, _updateConversation]);
+    
+    const deleteConversation = useCallback(async () => {
+        return _deleteConversation(id);
+    }, [id, _deleteConversation]);
 
     return {
-        conversation: activeConversation,
-        messages: enrichMessages(messages, activeConversation?.viewedAt),
-        isLoading: isLoadingConversations || isLoadingMessages,
-        sendMessage,
+        conversation,
+        isLoading,
+        error,
         updateConversation,
         deleteConversation
     };

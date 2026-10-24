@@ -17,14 +17,14 @@ import styles from './Message.module.scss';
 export default function Message({ message }: {
     message: Message;
 }) {
-    const { chat } = useChatContext();
+    const { api } = useChatContext();
 
     const [isEditing, setEditing] = useState(false);
 
     const handleSubmit = useCallback((content: string) => {
-        return chat.updateMessage(message.id, content)
+        return api.updateMessage(message.conversationId, message.id, content)
             .then(() => setEditing(false));
-    }, [chat, message.id]);
+    }, [api, message]);
 
     const handleEdit = useCallback(() => setEditing(true), []);
 

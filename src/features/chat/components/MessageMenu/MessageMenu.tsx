@@ -11,7 +11,7 @@ export default function MessageMenu({ message, onEdit }: {
     message: Message;
     onEdit: () => void;
 }) {
-    const { chat } = useChatContext();
+    const { api } = useChatContext();
 
     const [isEditable] = useState(() => Date.now() - new Date(message.createdAt).getTime() < EDIT_WINDOW);
 
@@ -41,7 +41,7 @@ export default function MessageMenu({ message, onEdit }: {
                     size: 's',
                     color: 'danger',
                     disabled: !isEditable,
-                    onClick: () => chat.deleteMessage(message.id)
+                    onClick: () => api.deleteMessage(message.conversationId, message.id)
                 }
             ]}
         />

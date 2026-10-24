@@ -34,6 +34,7 @@ export default function ConversationItem({
                     <Text
                         content={conversation.title}
                         size="s"
+                        ellipsis
                     />
 
                     {conversation.lastMessage?.createdAt && (

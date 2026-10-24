@@ -74,7 +74,7 @@ export function getTimeString(arg: DateInput): string {
 }
 
 export function getDateString(arg: DateInput): string {
-    return toDateTime(arg).toFormat('DD.MM.YYYY');
+    return toDateTime(arg).toFormat('d.MM.yyyy');
 }
 
 const fileSizeUnits = ['Б', 'КБ', 'МБ', 'ГБ'];

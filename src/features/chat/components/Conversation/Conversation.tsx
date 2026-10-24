@@ -1,30 +1,32 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Button, Heading, Menu, Screen, Spinner, State, Text } from '@olegpolyakov/ui';
 import { useAppContext } from '@olegpolyakov/frontend/app';
 import Editable from '@olegpolyakov/frontend/components/Editable';
 
-import useConversation from '../../hooks/useConversation';
+import useConversationContext from '../../hooks/useConversationContext';
 import MessageForm from '../MessageForm';
 import Messages from '../Messages';
 
 import styles from './Conversation.module.scss';
 
 export default function Conversation() {
-    const { conversationId = '', messageId = '' } = useParams<{ conversationId: string; messageId?: string }>();
     const { openDrawer } = useAppContext();
     const {
         conversation,
-        messages,
-        isLoading,
-        sendMessage,
         updateConversation,
-        deleteConversation
-    } = useConversation(conversationId);
+        deleteConversation,
+        messages,
+        isLoadingMessages,
+        initialMessageId,
+        createMessage
+    } = useConversationContext();
     const navigate = useNavigate();
 
     if (!conversation) return (
-        <State title="Такого чата нет" />
+        <Screen>
+            <State title="Такого чата нет" />
+        </Screen>
     );
 
     return (
@@ -41,9 +43,7 @@ export default function Conversation() {
                         content={
                             <Editable
                                 content={conversation.title}
-                                onBlur={title => updateConversation(conversation.id, {
-                                    title
-                                })}
+                                onBlur={title => title !== conversation.title && updateConversation({ title })}
                             />
                         }
                         ellipsis
@@ -76,7 +76,7 @@ export default function Conversation() {
                             },
                             onClick: () => {
                                 if (confirm('Are you sure you want to delete this conversation?')) {
-                                    deleteConversation(conversation.id);
+                                    deleteConversation();
                                     navigate('/');
                                 }
                             }
@@ -87,14 +87,14 @@ export default function Conversation() {
             </header>
 
             <div className={styles.body}>
-                {isLoading ? (
+                {isLoadingMessages ? (
                     <Screen>
                         <Spinner />
                     </Screen>
                 ) : (
                     <Messages
                         messages={messages}
-                        initialMessageId={messageId}
+                        initialMessageId={initialMessageId}
                     />
                 )}
             </div>
@@ -103,8 +103,8 @@ export default function Conversation() {
                 <MessageForm
                     key={conversation.id}
                     conversationId={conversation.id}
-                    placeholder="Сообщение…"
-                    onSubmit={sendMessage}
+                    placeholder="Message…"
+                    onSubmit={createMessage}
                 />
             </footer>
         </div>

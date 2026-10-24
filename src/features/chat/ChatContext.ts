@@ -1,9 +1,11 @@
 import { createContext } from 'react';
 
-import type { Chat } from './types';
+import type ChatApi from './ChatApi';
+import type ChatClient from './ChatClient';
 
 export type ChatContextValue = {
-    chat: Chat;
+    api: ChatApi;
+    client: ChatClient;
     userId: string;
 };
 

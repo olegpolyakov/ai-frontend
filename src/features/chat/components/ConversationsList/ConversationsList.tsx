@@ -1,19 +1,19 @@
 import { useNavigate } from 'react-router-dom';
 
-import { Button, List, Spinner } from '@olegpolyakov/ui';
+import { Button, List } from '@olegpolyakov/ui';
 import { useAppContext } from '@olegpolyakov/frontend/app';
 
-import useChatContext from '../../hooks/useChatContext';
+import useConversationsActions from '../../hooks/useConversationsActions';
+import useConversationsContext from '../../hooks/useConversationsContext';
 import ConversationItem from '../ConversationItem';
 
 import styles from './ConversationsList.module.scss';
 
 export default function ConversationsList() {
-    const { chat: { conversations, activeConversation, createConversation } } = useChatContext();
     const { closeDrawer } = useAppContext();
+    const { conversations, activeConversationId } = useConversationsContext();
+    const { createConversation } = useConversationsActions();
     const navigate = useNavigate();
-
-    if (!conversations) return <Spinner />;
 
     const handleCreate = async () => {
         const conversation = await createConversation('New Conversation');
@@ -31,7 +31,7 @@ export default function ConversationsList() {
                     <ConversationItem
                         key={conversation.id}
                         conversation={conversation}
-                        selected={conversation.id === activeConversation?.id}
+                        selected={conversation.id === activeConversationId}
                         onClick={closeDrawer}
                     />
                 ))}
