@@ -22,6 +22,7 @@ export type Conversation = {
     id: string;
     title: string;
     description: string;
+    model?: string;
     unreadMessagesCount: number;
     lastMessage: Pick<Message, 'content' | 'createdAt'>;
     viewedAt: string;
@@ -62,4 +63,10 @@ export type Message = {
     timeString?: string;
     isMine?: boolean;
     isFirstIsNew?: boolean;
+};
+
+export type Model = {
+    id: string;
+    name: string;
+    provider: string;
 };

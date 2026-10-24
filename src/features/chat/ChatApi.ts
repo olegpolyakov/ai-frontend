@@ -1,11 +1,17 @@
 import type { HttpClient } from '@olegpolyakov/frontend/clients/http';
 
-import type { Attachments, Conversation, Message, Messages } from './types';
+import type { Attachments, Conversation, Message, Messages, Model } from './types';
 
 export default class ChatApi {
     constructor(
         private readonly http: HttpClient
     ) {}
+
+    async getModels(options?: RequestInit): Promise<Model[]> {
+        const res = await this.http.get<{ data: Model[] }>('/models', options);
+
+        return res.data;
+    }
 
     async getConversations(options?: RequestInit): Promise<Conversation[]> {
         const res = await this.http.get<{ data: Conversation[] }>('/conversations', options);

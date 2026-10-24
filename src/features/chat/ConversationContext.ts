@@ -4,9 +4,10 @@ import type { Conversation, Message } from './types';
 
 export type ConversationContextValue = {
     conversation: Conversation;
-    updateConversation: (data?: {
-        title?: string | undefined;
-        description?: string | undefined;
+    updateConversation: (data: {
+        title?: string;
+        description?: string;
+        model?: string;
     }) => Promise<Conversation>;
     deleteConversation: () => Promise<void>;
 

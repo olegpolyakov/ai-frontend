@@ -5,6 +5,7 @@ import { Icon, Screen, Spinner, State } from '@olegpolyakov/ui';
 import ChatContext, { type ChatContextValue } from './ChatContext';
 import useChatApi from './hooks/useChatApi';
 import useChatClient from './hooks/useChatClient';
+import useModels from './hooks/useModels';
 
 export default function ChatProvider({
     accessToken,
@@ -21,14 +22,17 @@ export default function ChatProvider({
 }) {
     const api = useChatApi(apiUrl, accessToken);
     const { client, error, isConnected } = useChatClient(wsUrl, accessToken);
+    const { models } = useModels(api);
 
     const value = useMemo<ChatContextValue>(() => ({
         api,
         client,
+        models,
         userId
     }), [
         api,
         client,
+        models,
         userId
     ]);
 

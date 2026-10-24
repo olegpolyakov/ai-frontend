@@ -14,7 +14,9 @@ import MessageImages from './MessageImages';
 
 import styles from './Message.module.scss';
 
-export default function Message({ message }: {
+export default function Message({
+    message
+}: {
     message: Message;
 }) {
     const { api } = useChatContext();

@@ -22,10 +22,12 @@ type Attachment = {
 export default function MessageForm({
     conversationId,
     placeholder,
+    disabled,
     onSubmit
 }: {
     conversationId?: string;
     placeholder?: string;
+    disabled?: boolean;
     onSubmit: (message: string, files: File[]) => Promise<unknown>;
 }) {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -99,11 +101,13 @@ export default function MessageForm({
     const handleSubmit = useCallback(() => {
         if (loading || (!message.trim() && !attachments.length)) return;
 
+        const prevMessage = message;
+
         setLoading(true);
+        setMessage('');
 
         onSubmit(message, attachments.map(({ file }) => file))
             .then(() => {
-                setMessage('');
                 attachments.forEach(revokePreview);
                 setAttachments([]);
                 setHasError(false);
@@ -112,6 +116,7 @@ export default function MessageForm({
             })
             .catch(() => {
                 setHasError(true);
+                setMessage(prevMessage);
             })
             .finally(() => {
                 setLoading(false);
@@ -201,8 +206,8 @@ export default function MessageForm({
                     <Textarea
                         ref={textareaRef}
                         value={message}
-                        placeholder={placeholder}
-                        disabled={loading}
+                        placeholder={loading ? 'Sending...' : placeholder}
+                        disabled={disabled || loading}
                         onChange={({ value }) => setMessage(value!)}
                         onKeyDown={handleKeyDown}
                     />
@@ -225,7 +230,7 @@ export default function MessageForm({
                     icon="attach_file"
                     title="Приложить файл"
                     variant="tinted"
-                    disabled={loading}
+                    disabled={disabled || loading}
                     onClick={pick}
                 />
 
@@ -236,7 +241,7 @@ export default function MessageForm({
                     color="brand"
                     variant="filled"
                     loading={loading}
-                    disabled={loading || (!message.trim().length && !attachments.length)}
+                    disabled={disabled || loading || (!message.trim().length && !attachments.length)}
                     onClick={handleSubmit}
                 />
             </div>

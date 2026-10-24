@@ -4,14 +4,17 @@ import { Button, Heading, Menu, Screen, Spinner, State, Text } from '@olegpolyak
 import { useAppContext } from '@olegpolyakov/frontend/app';
 import Editable from '@olegpolyakov/frontend/components/Editable';
 
+import useChatContext from '../../hooks/useChatContext';
 import useConversationContext from '../../hooks/useConversationContext';
 import MessageForm from '../MessageForm';
 import Messages from '../Messages';
+import ModelSelect from '../ModelSelect';
 
 import styles from './Conversation.module.scss';
 
 export default function Conversation() {
     const { openDrawer } = useAppContext();
+    const { models } = useChatContext();
     const {
         conversation,
         updateConversation,
@@ -46,6 +49,7 @@ export default function Conversation() {
                                 onBlur={title => title !== conversation.title && updateConversation({ title })}
                             />
                         }
+                        size="s"
                         ellipsis
                     />
 
@@ -58,6 +62,12 @@ export default function Conversation() {
                         />
                     )}
                 </div>
+
+                <ModelSelect
+                    model={conversation.model}
+                    models={models}
+                    onSelect={model => updateConversation({ model })}
+                />
 
                 <Menu
                     trigger={
@@ -103,7 +113,8 @@ export default function Conversation() {
                 <MessageForm
                     key={conversation.id}
                     conversationId={conversation.id}
-                    placeholder="Message…"
+                    placeholder={conversation.model ? 'Message…' : 'Choose a model'}
+                    disabled={!conversation.model}
                     onSubmit={createMessage}
                 />
             </footer>
