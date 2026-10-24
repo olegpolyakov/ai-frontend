@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { Button, List } from '@olegpolyakov/ui';
+import { Button, List, Text } from '@olegpolyakov/ui';
 import { useAppContext } from '@olegpolyakov/frontend/app';
 
 import useConversationsActions from '../../hooks/useConversationsActions';
@@ -22,6 +22,14 @@ export default function ConversationsList() {
 
     return (
         <div className={styles.root}>
+            <Text
+                content="Conversations"
+                size="xxs"
+                color="secondary"
+                decorative
+                uppercase
+            />
+
             <List
                 className={styles.list}
                 as="nav"
