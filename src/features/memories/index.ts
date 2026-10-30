@@ -1,0 +1,1 @@
+export { default as Memories } from './components/Memories';
