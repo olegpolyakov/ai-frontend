@@ -8,20 +8,14 @@ import useChatClient from './hooks/useChatClient';
 import useModels from './hooks/useModels';
 
 export default function ChatProvider({
-    accessToken,
     userId,
-    apiUrl,
-    wsUrl,
     children
 }: {
-    accessToken: string;
     userId: string;
-    apiUrl: string;
-    wsUrl: string;
     children: React.ReactNode;
 }) {
-    const api = useChatApi(apiUrl, accessToken);
-    const { client, error, isConnected } = useChatClient(wsUrl, accessToken);
+    const api = useChatApi();
+    const { client, error, isConnected } = useChatClient();
     const { models } = useModels(api);
 
     const value = useMemo<ChatContextValue>(() => ({
@@ -41,7 +35,7 @@ export default function ChatProvider({
             <State
                 image={
                     <Icon
-                        name="error"
+                        name="chat_error"
                         size="xl"
                     />
                 }

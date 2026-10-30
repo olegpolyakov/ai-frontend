@@ -1,6 +1,7 @@
+import type { Ref } from '@olegpolyakov/core/objects/ref';
 import type { HttpClient } from '@olegpolyakov/frontend/clients/http';
 
-import type { Attachments, Conversation, Message, Messages, Model } from './types';
+import type { Conversation, Message, Messages, Model } from './types';
 
 export default class ChatApi {
     constructor(
@@ -50,11 +51,11 @@ export default class ChatApi {
 
     async sendMessage(
         conversationId: string,
-        { content, files, images }: { content?: string } & Partial<Attachments>
+        { content, refs }: { content?: string, refs?: Ref[] }
     ): Promise<Message> {
         const res = await this.http.post<{ data: Message }>(
             `/conversations/${conversationId}/messages`,
-            { content, files, images }
+            { content, refs }
         );
     
         return res.data;
@@ -81,18 +82,5 @@ export default class ChatApi {
 
     async deleteMessage(conversationId: string, messageId: string): Promise<void> {
         await this.http.delete(`/conversations/${conversationId}/messages/${messageId}`);
-    }
-
-    async uploadFiles(conversationId: string, files: File[]): Promise<Attachments> {
-        const data = new FormData();
-    
-        files.forEach(file => data.append('files', file));
-    
-        const res = await this.http.post<{ data: Attachments }, FormData>(
-            `/conversations/${conversationId}/files`,
-            data
-        );
-    
-        return res.data;
     }
 }

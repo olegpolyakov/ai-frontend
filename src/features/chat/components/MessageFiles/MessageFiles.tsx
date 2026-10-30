@@ -1,54 +1,82 @@
-import { Button, Icon, Text } from '@olegpolyakov/ui';
-import cn from '@olegpolyakov/frontend/helpers/classnames';
+import { useMemo } from 'react';
+
+import { Button, Item, Text } from '@olegpolyakov/ui';
+import { useAuthContext } from '@olegpolyakov/frontend/features/auth';
+import { useFiles } from '@olegpolyakov/frontend/features/files';
+import { useHttp } from '@olegpolyakov/frontend/services/http';
+
+import { FILES_API_URL } from '@/env';
 
 import { getFileIconName, getFileSizeString } from '../../helpers';
-import type { MessageFile } from '../../types';
 
 import styles from './MessageFiles.module.scss';
 
-export default function MessageFiles({ files, isMine }: {
-    files?: MessageFile[];
-    isMine?: boolean;
+export default function MessageFiles({
+    fileIds = []
+}: {
+    fileIds?: string[];
 }) {
-    if (!files?.length) return null;
+    const { accessToken = '' } = useAuthContext();
+    const http = useHttp(
+        FILES_API_URL, 
+        useMemo(() => ({ accessToken }), [accessToken])
+    );
+    const { filesById, isLoading } = useFiles(http, fileIds);
+
+    if (!fileIds?.length || isLoading) return null;
 
     return (
-        <div className={cn(styles.root, isMine && styles.mine)}>
-            {files.map(file => (
-                <div
-                    key={file.path}
-                    className={styles.file}
-                >
-                    <Icon name={getFileIconName(file.name)} />
-
-                    <div className={styles.info}>
-                        <Text
-                            className={styles.name}
-                            content={file.name}
-                            size="s"
+        <div className={styles.root}>
+            {fileIds.map(id => filesById[id])
+                .map(file => file.type.startsWith('image') ?
+                    <picture
+                        key={file.id}
+                        className={styles.image}
+                    >
+                        <img
+                            src={file.url}
+                            alt=""
                         />
+                    </picture>
+                    :
+                    <Item
+                        key={file.id}
+                        className={styles.file}
+                        icon={{
+                            name: getFileIconName(file.name),
+                            size: 'm'
+                        }}
+                        content={
+                            <div className={styles.info}>
+                                <Text
+                                    content={file.name}
+                                    size="s"
+                                />
 
-                        {file.size !== undefined && (
-                            <Text
-                                className={styles.size}
-                                content={getFileSizeString(file.size)}
-                                color="tertiary"
-                                size="xs"
+                                {file.size !== undefined && (
+                                    <Text
+                                        content={getFileSizeString(file.size)}
+                                        color="tertiary"
+                                        size="xs"
+                                    />
+                                )}
+                            </div>
+                        }
+                        end={
+                            <Button
+                                className={styles.downloadButton}
+                                as="a"
+                                icon="download"
+                                href={file.url}
+                                title="Download"
+                                size="s"
+                                download={file.name}
                             />
-                        )}
-                    </div>
-
-                    <Button
-                        className={styles.downloadButton}
-                        as="a"
-                        icon="download"
-                        href={file.url}
-                        title="Скачать файл"
-                        size="s"
-                        download={file.name}
+                        }
+                        shape="rounded-s"
+                        variant="outlined-tinted"
                     />
-                </div>
-            ))}
+                )}
         </div>
     );
 }

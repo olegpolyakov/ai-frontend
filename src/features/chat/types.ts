@@ -1,22 +1,4 @@
-export type Chat = {
-    initialized: boolean;
-    connected: boolean;
-    error?: Error;
-
-    conversations: Conversation[];
-    isLoadingConversations: boolean;
-    activeConversation?: Conversation;
-    setActiveConversation: (conversationId: string) => void;
-    createConversation: (title: string) => Promise<Conversation>;
-    updateConversation: (conversationId: string, data: { title?: string, description?: string }) => Promise<Conversation>;
-    deleteConversation: (conversationId: string) => Promise<void>;
-
-    messages: Message[];
-    isLoadingMessages: boolean;
-    sendMessage: (content: string, files?: File[]) => Promise<Message>;
-    updateMessage: (messageId: string, content: string) => Promise<void>;
-    deleteMessage: (messageId: string) => Promise<void>;
-};
+import type { Ref } from '@olegpolyakov/core/objects/ref';
 
 export type Conversation = {
     id: string;
@@ -29,17 +11,6 @@ export type Conversation = {
     userId: string;
 };
 
-export type MessageFile = { name: string; path: string; size?: number; url?: string };
-
-export type MessageImage = { path: string; url?: string };
-
-export type Attachments = {
-    files: MessageFile[];
-    images: MessageImage[];
-};
-
-export type MessageReaction = { count: number; userIds: string[] };
-
 export type Messages = {
     messagesById: Record<string, Message>;
     messagesInOrder: string[];
@@ -47,14 +18,12 @@ export type Messages = {
 
 export type Message = {
     id: string;
-    content: string;
-    layout: 'simple' | 'system';
-    files: MessageFile[];
-    images: MessageImage[];
-    role: string;
-    reactions: Record<string, string[]>;
     conversationId: string;
     userId: string;
+    content: string;
+    role: string;
+    layout: 'simple' | 'system';
+    refs: Ref[];
     createdAt: string;
     updatedAt: string;
     editedAt?: string;
@@ -63,6 +32,13 @@ export type Message = {
     timeString?: string;
     isMine?: boolean;
     isFirstIsNew?: boolean;
+};
+
+export type MessageFile = {
+    name: string;
+    path: string;
+    size?: number;
+    url?: string
 };
 
 export type Model = {

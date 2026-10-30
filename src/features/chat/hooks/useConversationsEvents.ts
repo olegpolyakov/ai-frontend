@@ -32,7 +32,10 @@ export default function useConversationsEvents(
             setConversations(conversations =>
                 conversations.map(c => c.id !== conversation.id ? c : {
                     ...c,
-                    ...conversation
+                    ...conversation,
+                    unreadMessagesCount: c.lastMessage && conversation.viewedAt > c.lastMessage.createdAt
+                        ? 0
+                        : c.unreadMessagesCount
                 })
             );
         }
@@ -53,7 +56,9 @@ export default function useConversationsEvents(
                         lastMessage: message,
                         unreadMessagesCount: c.id === activeConversationId
                             ? 0
-                            : c.unreadMessagesCount + 1
+                            : message.role === 'assistant'
+                                ? c.unreadMessagesCount + 1
+                                : c.unreadMessagesCount
                     };
                 })
             );

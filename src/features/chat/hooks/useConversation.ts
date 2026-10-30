@@ -19,6 +19,10 @@ export default function useConversation(id: string) {
 
     useEffect(() => {
         setActiveConversationId(id);
+
+        return () => {
+            api.updateConversationLastView(id);
+        };
     }, [id, api, setActiveConversationId]);
 
     const updateConversationLastView = useCallback(async (signal: AbortSignal) => {

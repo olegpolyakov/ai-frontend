@@ -47,6 +47,7 @@ export default function ConversationsList() {
 
             <Button
                 content="New Conversation"
+                size="s"
                 variant="tinted"
                 onClick={handleCreate}
             />

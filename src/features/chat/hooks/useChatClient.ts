@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { WsClient } from '@olegpolyakov/frontend/clients/ws';
+import { useApiContext } from '@olegpolyakov/frontend/services/api';
 
 import ChatClient, { ChatEvent, ChatState } from '../ChatClient';
 
-export default function useChatClient(wsUrl: string, accessToken: string) {
-    const clientRef = useRef(new ChatClient(new WsClient(wsUrl, { accessToken })));
+export default function useChatClient() {
+    const { ws } = useApiContext();
+
+    const clientRef = useRef(new ChatClient(ws));
     
     const [state, setState] = useState<ChatState>(ChatState.Disconnected);
     const [error, setError] = useState<Error | null>(null);
@@ -34,7 +36,7 @@ export default function useChatClient(wsUrl: string, accessToken: string) {
             
             client.disconnect();
         };
-    }, [wsUrl, accessToken]);
+    }, [ws]);
 
     return {
         get client() {

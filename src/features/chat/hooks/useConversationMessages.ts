@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import type { FileEntityRef } from '@olegpolyakov/core/objects/ref';
+import { useUploadContext } from '@olegpolyakov/frontend/features/upload';
 import { useRequest } from '@olegpolyakov/frontend/hooks/request';
 
 import { ChatMessageEvent } from '../ChatClient';
@@ -9,12 +11,13 @@ import type { Message } from '../types';
 
 export default function useConversationMessages(conversationId: string) {
     const { api, client } = useChatContext();
+    const { upload } = useUploadContext();
 
     const [messages, setMessages] = useState<Message[]>([]);
 
     const fetchMessages = useCallback(async (signal: AbortSignal) => {
         const messages = await api.getMessages(conversationId, { signal });
-            
+    
         setMessages(messages);
 
         return messages;
@@ -22,21 +25,26 @@ export default function useConversationMessages(conversationId: string) {
 
     const { isLoading, error } = useRequest(fetchMessages);
     
-    const createMessage = useCallback(async (content: string, files: File[] = []) => {    
-        const attachments = files.length
-            ? await api.uploadFiles(conversationId, files)
-            : undefined;
-    
+    const createMessage = useCallback(async (content: string, files: File[] = []) => {
+        const uploadedFiles = await Promise.all(
+            files.map(file => upload(file))
+        );
+
         return api.sendMessage(conversationId, {
             content,
-            ...attachments
+            refs: uploadedFiles.map(file => ({
+                kind: 'entity',
+                type: 'file',
+                id: file.id,
+                mimeType: file.type
+            }) as FileEntityRef)
         });
-    }, [conversationId, api]);
-    
+    }, [conversationId, upload, api]);
+
     const updateMessage = useCallback((messageId: string, content: string) => {
         return api.updateMessage(conversationId, messageId, content);
     }, [conversationId, api]);
-    
+
     const deleteMessage = useCallback((messageId: string) => {
         return api.deleteMessage(conversationId, messageId);
     }, [conversationId, api]);
@@ -45,7 +53,7 @@ export default function useConversationMessages(conversationId: string) {
         client.on(ChatMessageEvent.Created, handleCreated);
         client.on(ChatMessageEvent.Updated, handleUpdated);
         client.on(ChatMessageEvent.Deleted, handleDeleted);
-    
+
         return () => {
             client.off(ChatMessageEvent.Created, handleCreated);
             client.off(ChatMessageEvent.Updated, handleUpdated);
@@ -61,7 +69,7 @@ export default function useConversationMessages(conversationId: string) {
                     : [...messages, message]
             );
         }
-    
+
         function handleUpdated(message: Message) {
             if (message.conversationId !== conversationId) return;
     

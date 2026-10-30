@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 
-import { HttpClient } from '@olegpolyakov/frontend/clients/http';
+import { useApiContext } from '@olegpolyakov/frontend/services/api';
 
 import ChatApi from '../ChatApi';
 
-export default function useChatApi(apiUrl: string, accessToken: string) {
-    return useMemo(() => new ChatApi(
-        new HttpClient(apiUrl, { accessToken })
-    ), [apiUrl, accessToken]);
+export default function useChatApi() {
+    const { http } = useApiContext();
+
+    return useMemo(() => new ChatApi(http), [http]);
 }

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Heading, Menu, Screen, Spinner, State, Text } from '@olegpolyakov/ui';
+import { Button, Heading, Icon, Menu, Screen, Spinner, State, Text } from '@olegpolyakov/ui';
 import { useAppContext } from '@olegpolyakov/frontend/app';
 import Editable from '@olegpolyakov/frontend/components/Editable';
 
@@ -28,7 +28,15 @@ export default function Conversation() {
 
     if (!conversation) return (
         <Screen>
-            <State title="Такого чата нет" />
+            <State
+                image={
+                    <Icon
+                        name="chat_info"
+                        size="xl"
+                    />
+                }
+                description="Conversation not found"
+            />
         </Screen>
     );
 

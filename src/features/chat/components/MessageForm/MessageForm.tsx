@@ -32,10 +32,10 @@ export default function MessageForm({
 }) {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    const [loading, setLoading] = useState(false);
-    const [hasError, setHasError] = useState(false);
     const [message, setMessage] = useState('');
     const [attachments, setAttachments] = useState<Attachment[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<Error | null>(null);
 
     const { pick } = useFileInput({
         multiple: true,
@@ -110,13 +110,13 @@ export default function MessageForm({
             .then(() => {
                 attachments.forEach(revokePreview);
                 setAttachments([]);
-                setHasError(false);
+                setError(null);
 
                 globalThis.localStorage.removeItem(getLocalStorageKey(conversationId));
             })
-            .catch(() => {
-                setHasError(true);
+            .catch((error: Error) => {
                 setMessage(prevMessage);
+                setError(error);
             })
             .finally(() => {
                 setLoading(false);
@@ -138,7 +138,7 @@ export default function MessageForm({
         <div className={styles.root}>
             {attachments.length > 0 && (
                 <div className={styles.attachments}>
-                    {images.length > 0 && (
+                    {!loading && images.length > 0 && (
                         <div className={styles.images}>
                             {images.map(image => (
                                 <div
@@ -161,7 +161,7 @@ export default function MessageForm({
                         </div>
                     )}
 
-                    {files.length > 0 && (
+                    {!loading && files.length > 0 && (
                         <div className={styles.files}>
                             {files.map(({ id, file }) => (
                                 <Item
@@ -173,6 +173,7 @@ export default function MessageForm({
                                             icon="close"
                                             title="Убрать вложение"
                                             size="s"
+                                            variant="filled"
                                             onClick={() => removeAttachment(id)}
                                         />
                                     )}
@@ -212,15 +213,18 @@ export default function MessageForm({
                         onKeyDown={handleKeyDown}
                     />
 
-                    {hasError && (
+                    {error && (
                         <Text
-                            content="Ошибка отправки сообщения. Попробуйте снова"
+                            content={`Error sending the message: ${error.message}`}
                             color="danger"
                             size="xs"
-                            start={<Icon
-                                name="error"
-                                size="s"
-                            />}
+                            start={
+                                <Icon
+                                    name="error"
+                                    color="danger"
+                                    size="s"
+                                />
+                            }
                         />
                     )}
                 </div>
@@ -228,7 +232,7 @@ export default function MessageForm({
                 <Button
                     className={styles.fileButton}
                     icon="attach_file"
-                    title="Приложить файл"
+                    title="Attach a file"
                     variant="tinted"
                     disabled={disabled || loading}
                     onClick={pick}
@@ -237,7 +241,7 @@ export default function MessageForm({
                 <Button
                     className={styles.sendButton}
                     icon="send"
-                    title="Отправить сообщение"
+                    title="Send the message"
                     color="brand"
                     variant="filled"
                     loading={loading}

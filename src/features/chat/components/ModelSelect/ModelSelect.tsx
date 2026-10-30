@@ -51,7 +51,14 @@ export default function ModelSelect({
 
     const [provider, name] = model.split('/');
 
-    const filteredModels = models.filter(m => m.id.includes(query));
+    const filteredModels = models
+        .filter(item =>
+            !item.id.includes('embed') &&
+            !item.id.includes('image') &&
+            !item.id.includes('transcribe') &&
+            !item.id.includes('tts')
+        )
+        .filter(m => m.id.includes(query));
 
     return (
         <Popover
@@ -64,6 +71,7 @@ export default function ModelSelect({
                         </Icon>
                     }
                     content={name ? formatName(name) : 'Select Model'}
+                    size="s"
                     onClick={() => setOpen(true)}
                 />
             }

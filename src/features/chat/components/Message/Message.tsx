@@ -1,16 +1,15 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { Text } from '@olegpolyakov/ui';
+import { isFileEntityRef } from '@olegpolyakov/core/objects/ref';
 import cn from '@olegpolyakov/frontend/helpers/classnames';
 
 import useChatContext from '../../hooks/useChatContext';
 import type { Message } from '../../types';
+import MessageContent from '../MessageContent';
 import MessageEditor from '../MessageEditor';
 import MessageFiles from '../MessageFiles';
 import MessageMenu from '../MessageMenu';
-
-import MessageContent from './MessageContent';
-import MessageImages from './MessageImages';
 
 import styles from './Message.module.scss';
 
@@ -31,6 +30,12 @@ export default function Message({
     const handleEdit = useCallback(() => setEditing(true), []);
 
     const handleCancelEdit = useCallback(() => setEditing(false), []);
+
+    const fileIds = useMemo(() => {
+        return message.refs
+            .filter(isFileEntityRef)
+            .map(ref => ref.id);
+    }, [message.refs]);
 
     return (
         <div
@@ -65,21 +70,20 @@ export default function Message({
                     )} */}
                 </div>
 
+                <MessageFiles
+                    fileIds={fileIds}
+                />
+
                 <div className={styles.body}>
-                    {isEditing ? (
+                    {isEditing ?
                         <MessageEditor
                             content={message.content}
                             onSubmit={handleSubmit}
                             onCancel={handleCancelEdit}
                         />
-                    ) : message.content && <MessageContent content={message.content} />}
-
-                    <MessageImages images={message.images} />
-
-                    <MessageFiles
-                        files={message.files}
-                        isMine={message.isMine}
-                    />
+                        : message.content && 
+                            <MessageContent content={message.content} />
+                    }
                 </div>
 
                 {!isEditing && (
@@ -91,13 +95,13 @@ export default function Message({
                             size="xs"
                         />
 
-                        {!isEditing && message.editedAt && (
+                        {!isEditing && message.editedAt &&
                             <Text
                                 className={styles.edited}
                                 content="Edited"
                                 size="xs"
                             />
-                        )}
+                        }
                     
                         {message.isMine &&
                             <MessageMenu

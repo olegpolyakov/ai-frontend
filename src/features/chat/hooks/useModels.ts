@@ -13,12 +13,6 @@ export default function useModels(api: ChatApi) {
     const { data, isLoading, error } = useRequest(fetchModels);
 
     const models = useMemo<Model[]>(() => (data ?? [])
-        .filter(item =>
-            !item.id.includes('embed') &&
-            !item.id.includes('image') &&
-            !item.id.includes('transcribe') &&
-            !item.id.includes('tts')
-        )
         .map(item => {
             const [provider, name] = item.id.split('/');
 
