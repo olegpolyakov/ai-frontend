@@ -1,10 +1,12 @@
 import { Route, Routes } from 'react-router-dom';
 
-import { Heading, Icon, Screen, Scrollable, State } from '@olegpolyakov/ui';
+import { Flex, Heading, Icon, Screen, Scrollable, State } from '@olegpolyakov/ui';
 import { AppContent, AppDrawer, AppShell } from '@olegpolyakov/frontend/app';
 import { useAuthContext } from '@olegpolyakov/frontend/features/auth';
+import { UploadProvider } from '@olegpolyakov/frontend/features/upload';
+import { ApiProvider } from '@olegpolyakov/frontend/services/api';
 
-import { API_URL, WS_URL } from '@/env';
+import { API_URL, UPLOAD_URL, WS_URL } from '@/env';
 import {
     ChatProvider,
     Conversation,
@@ -12,63 +14,76 @@ import {
     ConversationsList,
     ConversationsProvider
 } from '@/features/chat';
+import { SettingsButton } from '@/features/settings';
 
 import styles from './App.module.scss';
 
 export default function App() {
-    const { accessToken, userId } = useAuthContext();
+    const { userId } = useAuthContext();
 
     return (
         <AppShell name="AI">
-            <ChatProvider
-                accessToken={accessToken}
-                userId={userId}
+            <ApiProvider
                 apiUrl={API_URL}
                 wsUrl={WS_URL}
             >
-                <ConversationsProvider>
-                    <AppDrawer scrollable={false}>
-                        <Scrollable
-                            className={styles.sidebar}
-                            fade
-                        >
-                            <Heading content="AI" />
-                            
-                            <ConversationsList />
-                        </Scrollable>
-                    </AppDrawer>
-                
-                    <AppContent>
-                        <Routes>
-                            <Route
-                                path="/:conversationId/:messageId?"
-                                element={
-                                    <ConversationProvider>
-                                        <Conversation />
-                                    </ConversationProvider>
-                                }
-                            />
-
-                            <Route
-                                path="*"
-                                element={
-                                    <Screen>
-                                        <State
-                                            image={
-                                                <Icon
-                                                    name="chat"
-                                                    size="xl"
-                                                />
-                                            }
-                                            description="Select or create a conversation"
+                <UploadProvider uploadUrl={UPLOAD_URL}>
+                    <ChatProvider userId={userId}>
+                        <ConversationsProvider>
+                            <AppDrawer scrollable={false}>
+                                <Scrollable
+                                    className={styles.sidebar}
+                                    fade
+                                >
+                                    <Flex
+                                        align="center"
+                                        justify="between"
+                                    >
+                                        <Heading
+                                            content="AI"
                                         />
-                                    </Screen>
-                                }
-                            />
-                        </Routes>
-                    </AppContent>
-                </ConversationsProvider>
-            </ChatProvider>
+
+                                        <SettingsButton />
+                                    </Flex>
+                            
+                            
+                                    <ConversationsList />
+                                </Scrollable>
+                            </AppDrawer>
+                
+                            <AppContent>
+                                <Routes>
+                                    <Route
+                                        path="/:conversationId/:messageId?"
+                                        element={
+                                            <ConversationProvider>
+                                                <Conversation />
+                                            </ConversationProvider>
+                                        }
+                                    />
+
+                                    <Route
+                                        path="*"
+                                        element={
+                                            <Screen>
+                                                <State
+                                                    image={
+                                                        <Icon
+                                                            name="chat"
+                                                            size="xl"
+                                                        />
+                                                    }
+                                                    description="Select or create a conversation"
+                                                />
+                                            </Screen>
+                                        }
+                                    />
+                                </Routes>
+                            </AppContent>
+                        </ConversationsProvider>
+                    </ChatProvider>
+                </UploadProvider>
+            </ApiProvider>
         </AppShell>
     );
 }
