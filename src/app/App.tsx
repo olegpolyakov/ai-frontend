@@ -1,6 +1,6 @@
-import { Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 
-import { Flex, Heading, Icon, Screen, Scrollable, State } from '@olegpolyakov/ui';
+import { Button, ButtonGroup, Flex, Heading, Scrollable } from '@olegpolyakov/ui';
 import { AppContent, AppDrawer, AppShell } from '@olegpolyakov/frontend/app';
 import { useAuthContext } from '@olegpolyakov/frontend/features/auth';
 import { UploadProvider } from '@olegpolyakov/frontend/features/upload';
@@ -15,6 +15,7 @@ import {
     ConversationsProvider
 } from '@/features/chat';
 import { ModelsProvider } from '@/features/models';
+import { Respond } from '@/features/respond';
 import { SettingsButton } from '@/features/settings';
 
 import styles from './App.module.scss';
@@ -52,6 +53,7 @@ export default function App() {
                                                     to="/"
                                                     title="New quick response"
                                                 />
+                                                
                                                 <SettingsButton />
                                             </ButtonGroup>
                                         </Flex>
@@ -72,6 +74,12 @@ export default function App() {
                                             }
                                         />
 
+                                        <Route
+                                            path="*"
+                                            element={
+                                                <Respond />
+                                            }
+                                        />
                                     </Routes>
                                 </AppContent>
                             </ConversationsProvider>

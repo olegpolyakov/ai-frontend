@@ -1,0 +1,1 @@
+export { default as Respond } from './components/Respond';
