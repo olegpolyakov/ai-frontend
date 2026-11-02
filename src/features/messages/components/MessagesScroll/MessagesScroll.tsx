@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useRef } from 'react';
 
-import type { Message } from '../../types';
+import type { MessageLike } from '../../types';
 
 import styles from './MessagesScroll.module.scss';
 
@@ -9,7 +9,7 @@ export default function MessagesScroll({
     initialMessageId,
     children
 }: {
-    messages: Message[];
+    messages: MessageLike[];
     initialMessageId?: string;
     children: ReactNode | ReactNode[];
 }) {

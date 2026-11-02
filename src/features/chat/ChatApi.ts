@@ -1,7 +1,8 @@
 import type { Ref } from '@olegpolyakov/core/objects/ref';
 import type { HttpClient } from '@olegpolyakov/frontend/clients/http';
 
-import type { Conversation, Message, Messages, Model } from './types';
+import type { MessageData, MessagesData } from '@/features/messages';
+import type { Conversation } from './types';
 
 export default class ChatApi {
     constructor(
@@ -52,8 +53,8 @@ export default class ChatApi {
     async sendMessage(
         conversationId: string,
         { content, refs }: { content?: string, refs?: Ref[] }
-    ): Promise<Message> {
-        const res = await this.http.post<{ data: Message }>(
+    ): Promise<MessageData> {
+        const res = await this.http.post<{ data: MessageData }>(
             `/conversations/${conversationId}/messages`,
             { content, refs }
         );
@@ -61,8 +62,8 @@ export default class ChatApi {
         return res.data;
     }
 
-    async getMessages(conversationId: string, options?: RequestInit): Promise<Message[]> {
-        const res = await this.http.get<{ data: Messages }>(`/conversations/${conversationId}/messages`, options);
+    async getMessages(conversationId: string, options?: RequestInit): Promise<MessageData[]> {
+        const res = await this.http.get<{ data: MessagesData }>(`/conversations/${conversationId}/messages`, options);
     
         if (!res?.data) return [];
     
@@ -71,8 +72,8 @@ export default class ChatApi {
         return messagesInOrder.map(id => messagesById[id]);
     }
 
-    async updateMessage(conversationId: string, messageId: string, content: string): Promise<Message> {
-        const res = await this.http.patch<{ data: Message }>(
+    async updateMessage(conversationId: string, messageId: string, content: string): Promise<MessageData> {
+        const res = await this.http.patch<{ data: MessageData }>(
             `/conversations/${conversationId}/messages/${messageId}`,
             { content }
         );

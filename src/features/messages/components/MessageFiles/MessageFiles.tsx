@@ -2,12 +2,10 @@ import { useMemo } from 'react';
 
 import { Button, Item, Text } from '@olegpolyakov/ui';
 import { useAuthContext } from '@olegpolyakov/frontend/features/auth';
-import { useFiles } from '@olegpolyakov/frontend/features/files';
+import { getFileIconName, getFileSizeString, useFiles } from '@olegpolyakov/frontend/features/files';
 import { useHttp } from '@olegpolyakov/frontend/services/http';
 
 import { FILES_API_URL } from '@/env';
-
-import { getFileIconName, getFileSizeString } from '../../helpers';
 
 import styles from './MessageFiles.module.scss';
 

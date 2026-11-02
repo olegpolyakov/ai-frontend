@@ -1,6 +1,8 @@
 import { createContext } from 'react';
 
-import type { Conversation, Message } from './types';
+import type { MessageAttachment, MessageData } from '@/features/messages';
+
+import type { Conversation } from './types';
 
 export type ConversationContextValue = {
     conversation: Conversation;
@@ -11,11 +13,11 @@ export type ConversationContextValue = {
     }) => Promise<Conversation>;
     deleteConversation: () => Promise<void>;
 
-    messages: Message[];
+    messages: MessageData[];
     isLoadingMessages: boolean;
     initialMessageId?: string;
-    createMessage: (content: string, files?: File[]) => Promise<Message>;
-    updateMessage: (messageId: string, content: string) => Promise<Message>;
+    createMessage: (content: string, attachments?: MessageAttachment[]) => Promise<MessageData>;
+    updateMessage: (messageId: string, content: string) => Promise<MessageData>;
     deleteMessage: (messageId: string) => Promise<void>;
 };
 

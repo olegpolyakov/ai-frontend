@@ -1,10 +1,11 @@
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button, Heading, Icon, Menu, Screen, Spinner, State, Text } from '@olegpolyakov/ui';
 import { useAppContext } from '@olegpolyakov/frontend/app';
 import Editable from '@olegpolyakov/frontend/components/Editable';
 
-import useChatContext from '../../hooks/useChatContext';
+import { Message, MessageForm, Messages } from '@/features/messages';
 import useConversationContext from '../../hooks/useConversationContext';
 import MessageForm from '../MessageForm';
 import Messages from '../Messages';
@@ -22,9 +23,26 @@ export default function Conversation() {
         messages,
         isLoadingMessages,
         initialMessageId,
-        createMessage
+        createMessage, 
+        updateMessage,
+        deleteMessage
     } = useConversationContext();
     const navigate = useNavigate();
+
+    const handleUpdateMessage = useCallback(async (messageId: string, content: string) => {
+        await updateMessage(messageId, content);
+    }, [updateMessage]);
+
+    const handleDeleteMessage = useCallback(async (messageId: string) => {
+        await deleteMessage(messageId);
+    }, [deleteMessage]);
+
+    const handleDeleteConversation = useCallback(() => {
+        if (confirm('Are you sure you want to delete this conversation?')) {
+            deleteConversation();
+            navigate('/');
+        }
+    }, [deleteConversation, navigate]);
 
     if (!conversation) return (
         <Screen>
@@ -71,12 +89,6 @@ export default function Conversation() {
                     )}
                 </div>
 
-                <ModelSelect
-                    model={conversation.model}
-                    models={models}
-                    onSelect={model => updateConversation({ model })}
-                />
-
                 <Menu
                     trigger={
                         <Button
@@ -92,12 +104,7 @@ export default function Conversation() {
                                 color: 'danger',
                                 name: 'delete'
                             },
-                            onClick: () => {
-                                if (confirm('Are you sure you want to delete this conversation?')) {
-                                    deleteConversation();
-                                    navigate('/');
-                                }
-                            }
+                            onClick: handleDeleteConversation
                         }
                     ]}
                     placement="bottom-end"
@@ -113,16 +120,30 @@ export default function Conversation() {
                     <Messages
                         messages={messages}
                         initialMessageId={initialMessageId}
-                    />
+                    >
+                        {message =>
+                            <Message
+                                message={message}
+                                onUpdate={handleUpdateMessage}
+                                onDelete={handleDeleteMessage}
+                            />
+                        }
+                    </Messages>
                 )}
             </div>
 
             <footer className={styles.footer}>
                 <MessageForm
                     key={conversation.id}
-                    conversationId={conversation.id}
-                    placeholder={conversation.model ? 'Message…' : 'Choose a model'}
+                    placeholder="Message…"
                     disabled={!conversation.model}
+                    actions={
+                        <ModelSelect
+                            model={conversation.model}
+                            placement="top"
+                            onSelect={model => updateConversation({ model })}
+                        />
+                    }
                     onSubmit={createMessage}
                 />
             </footer>

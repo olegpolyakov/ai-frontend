@@ -1,0 +1,89 @@
+.root {
+    width: 100%;
+    padding: var(--ui-space-xs);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--ui-space-xs);
+    align-items: end;
+
+    &.multiline {
+        grid-template-columns: 1fr;
+    }
+
+    &:has(.attachments) {
+        grid-template-areas:
+            'attachments attachments attachments'
+            'input       input       actions';
+        grid-template-rows: auto auto;
+        grid-template-columns: auto 1fr auto;
+
+        .attachments {
+            grid-area: attachments;
+        }
+
+        .input {
+            grid-area: input;
+        }
+
+        .actions {
+            grid-area: actions;
+        }
+    }
+}
+
+.attachments {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ui-space-xs);
+}
+
+.images,
+.files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ui-space-xs);
+}
+
+.input {
+    min-height: 1em;
+    margin: 0;
+    padding-left: var(--ui-space-xxs);
+    outline: none;
+    align-self: center;
+    word-break: break-word;
+    cursor: text;
+
+    &:empty::before {
+        content: attr(data-placeholder);
+        opacity: .5;
+    }
+}
+
+.actions {
+    display: flex;
+    gap: var(--ui-space-xxs);
+    justify-self: end;
+}
+
+.image {
+    position: relative;
+    flex-shrink: 0;
+    width: 75px;
+    height: 75px;
+    border-radius: 8px;
+    background-color: var(--joy-palette-neutral-100, #eee);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.file {
+    width: 100%;
+    max-width: 290px;
+}
+
+.removeButton {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+}

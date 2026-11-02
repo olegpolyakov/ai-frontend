@@ -1,20 +1,21 @@
-import { Fragment } from 'react';
+import { Fragment, type ReactNode } from 'react';
 
 import { Scrollable, Text } from '@olegpolyakov/ui';
 
 import { getMessagesByDate } from '../../helpers';
-import type { Message } from '../../types';
-import MessageComponent from '../Message';
+import type { MessageData } from '../../types';
 import MessagesScroll from '../MessagesScroll';
 
 import styles from './Messages.module.scss';
 
 export default function Messages({
     messages,
-    initialMessageId
+    initialMessageId,
+    children
 }: {
-    messages: Message[];
+    messages: MessageData[];
     initialMessageId?: string;
+    children: (message: MessageData) => ReactNode;
 }) {
     if (!messages?.length) return null;
 
@@ -41,9 +42,7 @@ export default function Messages({
 
                                             {message.role === 'system' ? (
                                                 <SystemText content={message.content} />
-                                            ) : (
-                                                <MessageComponent message={message} />
-                                            )}
+                                            ) : children(message)}
                                         </Fragment>
                                     ))}
                                 </Fragment>

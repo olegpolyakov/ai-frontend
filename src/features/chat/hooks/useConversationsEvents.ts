@@ -1,7 +1,9 @@
 import { type Dispatch, type SetStateAction, useEffect } from 'react';
 
+import type { MessageData } from '@/features/messages';
+
 import { ChatConversationEvent, ChatMessageEvent } from '../ChatClient';
-import { Conversation, type Message } from '../types';
+import type { Conversation } from '../types';
 
 import useChatContext from './useChatContext';
 
@@ -44,7 +46,7 @@ export default function useConversationsEvents(
             setConversations(cs => cs.filter(c => c.id !== conversation.id));
         }
 
-        function handleMessageCreated(message: Message) {
+        function handleMessageCreated(message: MessageData) {
             setConversations(cs =>
                 cs.map(c => {
                     if (c.id !== message.conversationId) {

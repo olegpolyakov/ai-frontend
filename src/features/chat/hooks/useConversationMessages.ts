@@ -1,19 +1,19 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import type { FileEntityRef } from '@olegpolyakov/core/objects/ref';
+import type { EntityRef } from '@olegpolyakov/core/objects/ref';
 import { useUploadContext } from '@olegpolyakov/frontend/features/upload';
 import { useRequest } from '@olegpolyakov/frontend/hooks/request';
 
+import { enrichMessages, MessageAttachment, MessageData } from '@/features/messages';
+
 import { ChatMessageEvent } from '../ChatClient';
-import { enrichMessages } from '../helpers';
 import useChatContext from '../hooks/useChatContext';
-import type { Message } from '../types';
 
 export default function useConversationMessages(conversationId: string) {
     const { api, client } = useChatContext();
     const { upload } = useUploadContext();
 
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages, setMessages] = useState<MessageData[]>([]);
 
     const fetchMessages = useCallback(async (signal: AbortSignal) => {
         const messages = await api.getMessages(conversationId, { signal });
@@ -25,9 +25,9 @@ export default function useConversationMessages(conversationId: string) {
 
     const { isLoading, error } = useRequest(fetchMessages);
     
-    const createMessage = useCallback(async (content: string, files: File[] = []) => {
+    const createMessage = useCallback(async (content: string, attachments: MessageAttachment[] = []) => {
         const uploadedFiles = await Promise.all(
-            files.map(file => upload(file))
+            attachments.map(({ file }) => upload(file))
         );
 
         return api.sendMessage(conversationId, {
@@ -36,8 +36,8 @@ export default function useConversationMessages(conversationId: string) {
                 kind: 'entity',
                 type: 'file',
                 id: file.id,
-                mimeType: file.type
-            }) as FileEntityRef)
+                uri: `/files/files/${file.id}`
+            }) as EntityRef)
         });
     }, [conversationId, upload, api]);
 
@@ -60,7 +60,7 @@ export default function useConversationMessages(conversationId: string) {
             client.off(ChatMessageEvent.Deleted, handleDeleted);
         };
 
-        function handleCreated(message: Message) {
+        function handleCreated(message: MessageData) {
             if (message.conversationId !== conversationId) return;
 
             setMessages((messages = []) =>
@@ -70,7 +70,7 @@ export default function useConversationMessages(conversationId: string) {
             );
         }
 
-        function handleUpdated(message: Message) {
+        function handleUpdated(message: MessageData) {
             if (message.conversationId !== conversationId) return;
     
             setMessages((messages = []) =>
@@ -80,7 +80,7 @@ export default function useConversationMessages(conversationId: string) {
             );
         }
 
-        function handleDeleted(message: Message) {
+        function handleDeleted(message: MessageData) {
             if (message.conversationId !== conversationId) return;
 
             setMessages((messages = []) =>

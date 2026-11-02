@@ -1,11 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import { Text } from '@olegpolyakov/ui';
-import { isFileEntityRef } from '@olegpolyakov/core/objects/ref';
+import { isEntityRef } from '@olegpolyakov/core/objects/ref';
 import cn from '@olegpolyakov/frontend/helpers/classnames';
 
-import useChatContext from '../../hooks/useChatContext';
-import type { Message } from '../../types';
+import type { MessageData } from '../../types';
 import MessageContent from '../MessageContent';
 import MessageEditor from '../MessageEditor';
 import MessageFiles from '../MessageFiles';
@@ -14,18 +13,20 @@ import MessageMenu from '../MessageMenu';
 import styles from './Message.module.scss';
 
 export default function Message({
-    message
+    message,
+    onUpdate,
+    onDelete
 }: {
-    message: Message;
+    message: MessageData;
+    onUpdate: (id: string, content: string) => Promise<void>;
+    onDelete: (id: string) => Promise<void>;
 }) {
-    const { api } = useChatContext();
-
     const [isEditing, setEditing] = useState(false);
 
     const handleSubmit = useCallback((content: string) => {
-        return api.updateMessage(message.conversationId, message.id, content)
+        return onUpdate(message.id, content)
             .then(() => setEditing(false));
-    }, [api, message]);
+    }, [message, onUpdate]);
 
     const handleEdit = useCallback(() => setEditing(true), []);
 
@@ -33,7 +34,7 @@ export default function Message({
 
     const fileIds = useMemo(() => {
         return message.refs
-            .filter(isFileEntityRef)
+            .filter(isEntityRef)
             .map(ref => ref.id);
     }, [message.refs]);
 
@@ -107,6 +108,7 @@ export default function Message({
                             <MessageMenu
                                 message={message}
                                 onEdit={handleEdit}
+                                onDelete={() => onDelete(message.id)}
                             />
                         }
                     </div>
