@@ -6,16 +6,14 @@ import { useAppContext } from '@olegpolyakov/frontend/app';
 import Editable from '@olegpolyakov/frontend/components/Editable';
 
 import { Message, MessageForm, Messages } from '@/features/messages';
+import { ModelSelect } from '@/features/models';
+
 import useConversationContext from '../../hooks/useConversationContext';
-import MessageForm from '../MessageForm';
-import Messages from '../Messages';
-import ModelSelect from '../ModelSelect';
 
 import styles from './Conversation.module.scss';
 
 export default function Conversation() {
     const { openDrawer } = useAppContext();
-    const { models } = useChatContext();
     const {
         conversation,
         updateConversation,

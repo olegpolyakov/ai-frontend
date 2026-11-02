@@ -2,6 +2,8 @@ import type { Ref } from '@olegpolyakov/core/objects/ref';
 import type { HttpClient } from '@olegpolyakov/frontend/clients/http';
 
 import type { MessageData, MessagesData } from '@/features/messages';
+import type { Model } from '@/features/models';
+
 import type { Conversation } from './types';
 
 export default class ChatApi {

@@ -2,10 +2,10 @@ import { useCallback, useMemo } from 'react';
 
 import { useRequest } from '@olegpolyakov/frontend/hooks/request';
 
-import type ChatApi from '../ChatApi';
+import type ModelsApi from '../ModelsApi';
 import type { Model } from '../types';
 
-export default function useModels(api: ChatApi) {
+export default function useModels(api: ModelsApi) {
     const fetchModels = useCallback(async (signal: AbortSignal) => {
         return api.getModels({ signal });
     }, [api]);

@@ -14,6 +14,7 @@ import {
     ConversationsList,
     ConversationsProvider
 } from '@/features/chat';
+import { ModelsProvider } from '@/features/models';
 import { SettingsButton } from '@/features/settings';
 
 import styles from './App.module.scss';
@@ -27,62 +28,56 @@ export default function App() {
                 apiUrl={API_URL}
                 wsUrl={WS_URL}
             >
-                <UploadProvider uploadUrl={UPLOAD_URL}>
-                    <ChatProvider userId={userId}>
-                        <ConversationsProvider>
-                            <AppDrawer scrollable={false}>
-                                <Scrollable
-                                    className={styles.sidebar}
-                                    fade
-                                >
-                                    <Flex
-                                        align="center"
-                                        justify="between"
+                <ModelsProvider>
+                    <UploadProvider uploadUrl={UPLOAD_URL}>
+                        <ChatProvider userId={userId}>
+                            <ConversationsProvider>
+                                <AppDrawer scrollable={false}>
+                                    <Scrollable
+                                        className={styles.sidebar}
+                                        fade
                                     >
-                                        <Heading
-                                            content="AI"
+                                        <Flex
+                                            align="center"
+                                            justify="between"
+                                        >
+                                            <Heading
+                                                content="AI"
+                                            />
+
+                                            <ButtonGroup>
+                                                <Button
+                                                    as={Link}
+                                                    icon="quickreply"
+                                                    to="/"
+                                                    title="New quick response"
+                                                />
+                                                <SettingsButton />
+                                            </ButtonGroup>
+                                        </Flex>
+                            
+                            
+                                        <ConversationsList />
+                                    </Scrollable>
+                                </AppDrawer>
+                
+                                <AppContent>
+                                    <Routes>
+                                        <Route
+                                            path="/:conversationId/:messageId?"
+                                            element={
+                                                <ConversationProvider>
+                                                    <Conversation />
+                                                </ConversationProvider>
+                                            }
                                         />
 
-                                        <SettingsButton />
-                                    </Flex>
-                            
-                            
-                                    <ConversationsList />
-                                </Scrollable>
-                            </AppDrawer>
-                
-                            <AppContent>
-                                <Routes>
-                                    <Route
-                                        path="/:conversationId/:messageId?"
-                                        element={
-                                            <ConversationProvider>
-                                                <Conversation />
-                                            </ConversationProvider>
-                                        }
-                                    />
-
-                                    <Route
-                                        path="*"
-                                        element={
-                                            <Screen>
-                                                <State
-                                                    image={
-                                                        <Icon
-                                                            name="chat"
-                                                            size="xl"
-                                                        />
-                                                    }
-                                                    description="Select or create a conversation"
-                                                />
-                                            </Screen>
-                                        }
-                                    />
-                                </Routes>
-                            </AppContent>
-                        </ConversationsProvider>
-                    </ChatProvider>
-                </UploadProvider>
+                                    </Routes>
+                                </AppContent>
+                            </ConversationsProvider>
+                        </ChatProvider>
+                    </UploadProvider>
+                </ModelsProvider>
             </ApiProvider>
         </AppShell>
     );

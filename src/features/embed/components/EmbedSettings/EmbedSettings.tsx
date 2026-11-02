@@ -1,9 +1,9 @@
 import { Field, Select } from '@olegpolyakov/ui';
 
-import useChatContext from '@/features/chat/hooks/useChatContext';
+import { useModelsContext } from '@/features/models';
 
 export default function EmbedSettings() {
-    const { models } = useChatContext();
+    const { models } = useModelsContext();
 
     const embedModels = models.filter(m => m.id.includes('embed'));
 
