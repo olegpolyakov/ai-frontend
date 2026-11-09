@@ -142,23 +142,23 @@ export default class ChatClient extends EventEmitter {
         const change = JSON.parse((event as MessageEvent).data);
 
         switch (`${change.model}.${change.action}`) {
-            case 'Conversation.insert':
+            case 'conversation.create':
                 this.emit(ChatConversationEvent.Created, change.data);
                 break;
-            case 'Conversation.update':
+            case 'conversation.update':
                 this.emit(ChatConversationEvent.Updated, change.data);
                 break;
-            case 'Conversation.delete':
+            case 'conversation.delete':
                 this.emit(ChatConversationEvent.Deleted, change.data);
                 break;
 
-            case 'Message.insert':
+            case 'message.create':
                 this.emit(ChatMessageEvent.Created, change.data);
                 break;
-            case 'Message.update':
+            case 'message.update':
                 this.emit(ChatMessageEvent.Updated, change.data);
                 break;
-            case 'Message.delete':
+            case 'message.delete':
                 this.emit(ChatMessageEvent.Deleted, change.data);
                 break;
         }
