@@ -1,14 +1,13 @@
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 
-import { useModels } from '@/features/models';
-
+import useModels from './hooks/useModels';
 import useModelsApi from './hooks/useModelsApi';
 import ModelsContext, { type ModelsContextValue } from './ModelsContext';
 
-export default function ChatProvider({
+export default function ModelsProvider({
     children
 }: {
-    children: React.ReactNode;
+    children: ReactNode;
 }) {
     const api = useModelsApi();
     const { models, error, isLoading } = useModels(api);

@@ -1,6 +1,6 @@
 import type { HttpClient } from '@olegpolyakov/frontend/clients/http';
 
-import type { Model } from '@/features/models';
+import type { Model } from './types';
 
 export default class ModelsApi {
     constructor(
