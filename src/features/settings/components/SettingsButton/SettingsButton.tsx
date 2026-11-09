@@ -14,6 +14,7 @@ export default function SettingsButton() {
         />
 
         <Dialog
+            title="Settings"
             open={isOpen}
             onClose={() => setOpen(false)}
         >

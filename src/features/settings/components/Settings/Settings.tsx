@@ -1,4 +1,4 @@
-import { Heading, Icon, Tab, TabGroup, TabPanel, Tabs } from '@olegpolyakov/ui';
+import { Icon, Tab, TabGroup, TabPanel, Tabs } from '@olegpolyakov/ui';
 
 import { EmbedSettings } from '@/features/embed';
 import { Memories } from '@/features/memories';
@@ -8,8 +8,6 @@ import styles from './Settings.module.scss';
 export default function Settings() {
     return (
         <div className={styles.root}>
-            <Heading content="Settings" />
-            
             <Tabs defaultValue="memories">
                 <TabGroup>
                     <Tab
