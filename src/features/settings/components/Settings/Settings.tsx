@@ -1,6 +1,7 @@
 import { Icon, Tab, TabGroup, TabPanel, Tabs } from '@olegpolyakov/ui';
 
 import { EmbedSettings } from '@/features/embed';
+import { IntegrationsSettings } from '@/features/integrations';
 import { Memories } from '@/features/memories';
 
 import styles from './Settings.module.scss';
@@ -21,6 +22,12 @@ export default function Settings() {
                         value="embed"
                         content="Embed"
                     />
+
+                    <Tab
+                        start={<Icon name="extension" />}
+                        value="integrations"
+                        content="Integrations"
+                    />
                 </TabGroup>
 
                 <TabPanel value="memories">
@@ -29,6 +36,10 @@ export default function Settings() {
 
                 <TabPanel value="embed">
                     <EmbedSettings />
+                </TabPanel>
+
+                <TabPanel value="integrations">
+                    <IntegrationsSettings />
                 </TabPanel>
             </Tabs>
         </div>
