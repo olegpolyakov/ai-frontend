@@ -2,16 +2,20 @@
     hyphens: auto;
     word-break: break-word;
 
+    :first-child {
+        margin-top: 0;
+    }
+
+    :last-child {
+        margin-bottom: 0;
+    }
+
     &.plain {
         white-space: pre-wrap;
     }
 
     p {
-        margin: 0;
-    }
-
-    p + p {
-        margin-top: var(--ui-space-s);
+        margin-top: 0;
     }
 
     p, ol, ul {

@@ -1,6 +1,6 @@
 import { type InputEvent, type KeyboardEvent, type ReactNode, useEffect, useRef, useState } from 'react';
 
-import { Box, Button, Flex, Icon, Item, Text } from '@olegpolyakov/ui';
+import { Alert, Button, ButtonGroup, Flex, Icon, Item, Text, Textbox } from '@olegpolyakov/ui';
 import { NIL, v3 as uuid } from '@olegpolyakov/core/utils/uuid';
 import { getFileIconName, getFileSizeString } from '@olegpolyakov/frontend/features/files';
 import cn from '@olegpolyakov/frontend/helpers/classnames';
@@ -9,8 +9,6 @@ import { useFileInput } from '@olegpolyakov/frontend/hooks/file';
 import type { MessageAttachment, MessageData } from '@/features/messages';
 
 import styles from './MessageForm.module.scss';
-
-const SINGLE_LINE_HEIGHT = 28;
 
 export default function MessageForm({
     placeholder,
@@ -31,7 +29,6 @@ export default function MessageForm({
     const [attachments, setAttachments] = useState<MessageAttachment[]>([]);
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
-    const [isMultiline, setMultiline] = useState(false);
 
     useEffect(() => {
         attachmentsRef.current = attachments;
@@ -80,7 +77,7 @@ export default function MessageForm({
     }, []);
 
     const submit = () => {
-        const content = inputRef.current?.textContent?.trim() ?? '';
+        const content = inputRef.current?.innerText?.trim() ?? '';
         const attachments = attachmentsRef?.current;
 
         if (content && !attachments || disabled) return;
@@ -130,27 +127,11 @@ export default function MessageForm({
     };
 
     const handleInput = (event: InputEvent<HTMLParagraphElement>) => {
-        // const target = event.target as HTMLParagraphElement;
-        // const root = rootRef.current;
-        // const actions = actionsRef.current;
+        const value = (event.target as HTMLParagraphElement).innerText?.trim();
 
-        // if (!root || !actions) return;
-
-        // if (!isMultiline) {
-        //     if (target.offsetHeight > SINGLE_LINE_HEIGHT) {
-        //         setMultiline(true);
-        //     }
-        // } else {
-        //     const range = document.createRange();
-        //     range.selectNodeContents(target);
-        //     const textWidth = range.getBoundingClientRect().width;
-        //     const gapAndPadding = 36; // Padding (12px * 2) + Gap (12px)
-        //     const availableNarrowWidth = root.clientWidth - actions.offsetWidth - gapAndPadding;
-
-        //     if (textWidth < availableNarrowWidth) {
-        //         setMultiline(false);
-        //     }
-        // }
+        if (!value) {
+            (event.target as HTMLParagraphElement).innerHTML = '';
+        }
     };
     
     const handleKeyDown = (event: KeyboardEvent<HTMLParagraphElement>) => {
@@ -168,132 +149,129 @@ export default function MessageForm({
     const files = attachments.filter(({ previewUrl }) => !previewUrl);
 
     return (
-        <Box
+        <Textbox
             ref={rootRef}
-            className={cn(styles.root, isMultiline && styles.multiline)}
+            className={cn(styles.root)}
             shape="rounded-m"
             variant="outlined-tinted"
-        >
-            {attachments.length > 0 && (
-                <div className={styles.attachments}>
-                    {!isLoading && images.length > 0 && (
-                        <div className={styles.images}>
-                            {images.map(image => (
-                                <div
-                                    key={image.id}
-                                    className={styles.image}
-                                    style={{
-                                        backgroundImage: `url(${image.previewUrl})`
-                                    }}
-                                >
-                                    {!isLoading && (
-                                        <Button
-                                            className={styles.removeButton}
-                                            icon="remove"
-                                            title="Remove the image"
-                                            size="xs"
-                                            variant="filled"
-                                            onClick={() => removeAttachment(image.id)}
-                                        />
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    )}
+            size="l"
+            start={(error || attachments.length > 0) && <>
+                {error && (
+                    <Alert
+                        className={styles.error}
+                        intent="danger"
+                        content={`Error sending the message: ${error.message}`}
+                        size="s"
+                    />
+                )}
 
-                    {!isLoading && files.length > 0 && (
-                        <div className={styles.files}>
-                            {files.map(({ id, file }) => (
-                                <Item
-                                    key={id}
-                                    className={styles.file}
-                                    start={<Icon name={getFileIconName(file.name)} />}
-                                    end={!isLoading && (
-                                        <Button
-                                            icon="remove"
-                                            title="Remove the file"
-                                            size="s"
-                                            variant="filled"
-                                            onClick={() => removeAttachment(id)}
-                                        />
-                                    )}
-                                    shape="rounded-m"
-                                    variant="outlined"
-                                >
-                                    <Flex
-                                        column
-                                        gap="xxs"
+                {attachments.length > 0 && (
+                    <div className={styles.attachments}>
+                        {!isLoading && images.length > 0 && (
+                            <div className={styles.images}>
+                                {images.map(image => (
+                                    <div
+                                        key={image.id}
+                                        className={styles.image}
+                                        style={{
+                                            backgroundImage: `url(${image.previewUrl})`
+                                        }}
                                     >
-                                        <Text
-                                            content={file.name}
-                                            size="s"
-                                        />
+                                        {!isLoading && (
+                                            <Button
+                                                className={styles.removeButton}
+                                                icon="remove"
+                                                title="Remove the image"
+                                                size="xs"
+                                                variant="filled"
+                                                onClick={() => removeAttachment(image.id)}
+                                            />
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
-                                        <Text
-                                            content={getFileSizeString(file.size)}
-                                            size="xs"
-                                            color="tertiary"
-                                        />
-                                    </Flex>
-                                </Item>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            )}
+                        {!isLoading && files.length > 0 && (
+                            <div className={styles.files}>
+                                {files.map(({ id, file }) => (
+                                    <Item
+                                        key={id}
+                                        className={styles.file}
+                                        start={<Icon name={getFileIconName(file.name)} />}
+                                        end={!isLoading && (
+                                            <Button
+                                                icon="remove"
+                                                title="Remove the file"
+                                                size="s"
+                                                variant="filled"
+                                                onClick={() => removeAttachment(id)}
+                                            />
+                                        )}
+                                        shape="rounded-m"
+                                        variant="outlined"
+                                    >
+                                        <Flex
+                                            column
+                                            gap="xxs"
+                                        >
+                                            <Text
+                                                content={file.name}
+                                                size="s"
+                                            />
 
-            <p
-                ref={inputRef}
-                className={styles.input}
-                data-placeholder={placeholder}
-                contentEditable
-                onKeyDown={handleKeyDown}
-                onFocus={handleFocus}
-                onInput={handleInput}
-            />
+                                            <Text
+                                                content={getFileSizeString(file.size)}
+                                                size="xs"
+                                                color="tertiary"
+                                            />
+                                        </Flex>
+                                    </Item>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+            </>}
+            control={
+                <p
+                    ref={inputRef}
+                    className={styles.input}
+                    data-placeholder={placeholder}
+                    contentEditable
+                    onKeyDown={handleKeyDown}
+                    onFocus={handleFocus}
+                    onInput={handleInput}
+                />
+            }
+            end={
+                <div className={styles.actions}>
+                    {actions}
 
-            {error && (
-                <Text
-                    content={`Error sending the message: ${error.message}`}
-                    color="danger"
-                    size="xs"
-                    start={
-                        <Icon
-                            name="error"
-                            color="danger"
-                            size="s"
+                    <ButtonGroup>
+                        <Button
+                            className={styles.fileButton}
+                            icon="attach_file"
+                            title="Attach a file"
+                            variant="tinted"
+                            disabled={disabled || isLoading}
+                            onClick={pick}
                         />
-                    }
-                />
-            )}
 
-            <div
-                ref={actionsRef}
-                className={styles.actions}
-            >
-                {actions}
-
-                <Button
-                    className={styles.fileButton}
-                    icon="attach_file"
-                    title="Attach a file"
-                    variant="tinted"
-                    disabled={disabled || isLoading}
-                    onClick={pick}
-                />
-
-                <Button
-                    className={styles.sendButton}
-                    icon="send"
-                    title="Send the message"
-                    color="brand"
-                    variant="filled"
-                    loading={isLoading}
-                    disabled={disabled || isLoading}
-                    onClick={submit}
-                />
-            </div>
-        </Box>
+                        <Button
+                            className={styles.sendButton}
+                            icon="send"
+                            title="Send the message"
+                            color="brand"
+                            variant="filled"
+                            loading={isLoading}
+                            disabled={disabled || isLoading}
+                            onClick={submit}
+                        />
+                    </ButtonGroup>
+                </div>
+            }
+        />
     );
 }
 

@@ -35,6 +35,7 @@ export default function Message({
     const fileIds = useMemo(() => {
         return message.refs
             .filter(isEntityRef)
+            .filter(ref => ref.type === 'file')
             .map(ref => ref.id);
     }, [message.refs]);
 

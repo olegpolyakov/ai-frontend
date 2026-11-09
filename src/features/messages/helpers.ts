@@ -4,6 +4,12 @@ import type { MessageData, MessageLike } from '@/features/messages';
 
 type DateInput = number | string | Date | DateTime;
 
+const EDIT_WINDOW = 1000 * 60 * 30; // 30 minutes
+
+export function isMessageEditable(message: MessageData, at: Date = new Date()): boolean {
+    return at.getTime() - new Date(message.createdAt).getTime() < EDIT_WINDOW;
+}
+
 export function enrichMessages<T extends MessageLike>(
     messages: T[] = [],
     lastMessageViewedAt?: string

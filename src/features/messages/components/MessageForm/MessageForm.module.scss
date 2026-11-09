@@ -1,39 +1,12 @@
 .root {
     width: 100%;
+    display: flex;
     padding: var(--ui-space-xs);
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: var(--ui-space-xs);
-    align-items: end;
-
-    &.multiline {
-        grid-template-columns: 1fr;
-    }
-
-    &:has(.attachments) {
-        grid-template-areas:
-            'attachments attachments attachments'
-            'input       input       actions';
-        grid-template-rows: auto auto;
-        grid-template-columns: auto 1fr auto;
-
-        .attachments {
-            grid-area: attachments;
-        }
-
-        .input {
-            grid-area: input;
-        }
-
-        .actions {
-            grid-area: actions;
-        }
-    }
+    flex-direction: column;
 }
 
 .attachments {
     display: flex;
-    flex-direction: column;
     gap: var(--ui-space-xs);
 }
 
@@ -45,9 +18,9 @@
 }
 
 .input {
+    width: 100%;
     min-height: 1em;
     margin: 0;
-    padding-left: var(--ui-space-xxs);
     outline: none;
     align-self: center;
     word-break: break-word;
@@ -60,9 +33,9 @@
 }
 
 .actions {
+    width: 100%;
     display: flex;
-    gap: var(--ui-space-xxs);
-    justify-self: end;
+    justify-content: space-between;
 }
 
 .image {

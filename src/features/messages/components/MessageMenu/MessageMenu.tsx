@@ -2,9 +2,8 @@ import { useState } from 'react';
 
 import { Button, Menu } from '@olegpolyakov/ui';
 
+import { isMessageEditable } from '../../helpers';
 import type { MessageData } from '../../types';
-
-const EDIT_WINDOW = 1000 * 60 * 30; // 30 minutes
 
 export default function MessageMenu({
     message,
@@ -15,7 +14,7 @@ export default function MessageMenu({
     onEdit: () => void;
     onDelete: () => void;
 }) {
-    const [isEditable] = useState(() => Date.now() - new Date(message.createdAt).getTime() < EDIT_WINDOW);
+    const [isEditable] = useState(() => isMessageEditable(message));
 
     if (!message.isMine) return null;
 
@@ -23,23 +22,28 @@ export default function MessageMenu({
         <Menu
             trigger={
                 <Button
-                    icon="more_horiz"
+                    title="Message Menu"
+                    icon="more_vert"
                     size="xs"
                     variant="plain"
-                    title="Меню сообщения"
                 />
             }
             items={[
                 {
                     key: 'edit',
-                    content: 'Изменить',
+                    icon: 'edit',
+                    content: 'Edit',
                     size: 's',
                     disabled: !isEditable,
                     onClick: onEdit
                 },
                 {
                     key: 'delete',
-                    content: 'Удалить',
+                    icon: {
+                        name: 'delete',
+                        color: 'danger'
+                    },
+                    content: 'Delete',
                     size: 's',
                     color: 'danger',
                     disabled: !isEditable,
