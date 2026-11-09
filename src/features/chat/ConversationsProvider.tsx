@@ -17,7 +17,7 @@ export default function ConversationsProvider({ children }: { children: ReactNod
     const { createConversation, updateConversation, deleteConversation } = useConversationsActions();
 
     const value = useMemo(() => ({
-        conversations,
+        conversations: conversations.map(c => ({ ...c, title: c.title || 'Untitled Conversation' })),
         createConversation,
         updateConversation,
         deleteConversation,

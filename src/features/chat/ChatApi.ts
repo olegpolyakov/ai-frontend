@@ -29,7 +29,7 @@ export default class ChatApi {
         return res.data;
     }
 
-    async createConversation(title: string): Promise<Conversation> {
+    async createConversation(title?: string): Promise<Conversation> {
         const res = await this.http.post<{ data: Conversation }>('/conversations', { title });
         
         return res.data;

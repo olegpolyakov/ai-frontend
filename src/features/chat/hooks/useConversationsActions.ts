@@ -5,7 +5,7 @@ import useChatContext from './useChatContext';
 export default function useConversationsActions() {
     const { api } = useChatContext();
 
-    const createConversation = useCallback(async (title: string) => {
+    const createConversation = useCallback(async (title?: string) => {
         return api.createConversation(title);
     }, [api]);
 

@@ -36,7 +36,7 @@ export default function useConversationMessages(conversationId: string) {
                 kind: 'entity',
                 type: 'file',
                 id: file.id,
-                uri: `/files/files/${file.id}`
+                uri: `app://files/files/${file.id}`
             }) as EntityRef)
         });
     }, [conversationId, upload, api]);
@@ -49,7 +49,7 @@ export default function useConversationMessages(conversationId: string) {
         return api.deleteMessage(conversationId, messageId);
     }, [conversationId, api]);
 
-    useEffect(() => {    
+    useEffect(() => {
         client.on(ChatMessageEvent.Created, handleCreated);
         client.on(ChatMessageEvent.Updated, handleUpdated);
         client.on(ChatMessageEvent.Deleted, handleDeleted);

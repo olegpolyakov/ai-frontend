@@ -16,7 +16,7 @@ export default function ConversationsList() {
     const navigate = useNavigate();
 
     const handleCreate = async () => {
-        const conversation = await createConversation('New Conversation');
+        const conversation = await createConversation();
         navigate(`/${conversation.id}`);
     };
 
