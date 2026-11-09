@@ -1,6 +1,8 @@
 {
     "name": "@olegpolyakov/ai-frontend",
     "version": "0.1.0",
+    "description": "",
+    "author": "Oleg Poliakov <olegpoliakov@outlook.com>",
     "type": "module",
     "scripts": {
         "build": "vite build",
