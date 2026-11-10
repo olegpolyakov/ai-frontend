@@ -9,7 +9,7 @@
         "dev": "vite dev",
         "compile": "tsc --noEmit",
         "lint": "eslint ./src",
-        "preversion": "npm update --package-lock-only --workspaces=false && git add package-lock.json",
+        "preversion": "npm update --workspaces=false && npm run build && git add package-lock.json",
         "postversion": "git push origin v$npm_package_version"
     },
     "dependencies": {
