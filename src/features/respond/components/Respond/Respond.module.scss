@@ -18,6 +18,7 @@
 
 .header,
 .footer {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     gap: var(--ui-space-s);
@@ -34,8 +35,8 @@
 }
 
 .footer {
-    flex-direction: column;
     width: 100%;
     max-width: 768px;
+    flex-direction: column;
     margin: 0 auto;
 }
