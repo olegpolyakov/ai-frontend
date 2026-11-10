@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Heading, Icon, Menu, Screen, Spinner, State, Text } from '@olegpolyakov/ui';
 import { useAppContext } from '@olegpolyakov/frontend/app';
 import Editable from '@olegpolyakov/frontend/components/Editable';
+import { useTitle } from '@olegpolyakov/frontend/hooks/dom';
 
 import { Message, MessageForm, Messages } from '@/features/messages';
 import { ModelSelect } from '@/features/models';
@@ -26,6 +27,7 @@ export default function Conversation() {
         deleteMessage
     } = useConversationContext();
     const navigate = useNavigate();
+    useTitle(conversation.title);
 
     const handleUpdateMessage = useCallback(async (messageId: string, content: string) => {
         await updateMessage(messageId, content);
