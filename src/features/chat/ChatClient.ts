@@ -3,54 +3,9 @@ import {
     WsClientEvent as ChatEvent,
     WsClientStatus as ChatState
 } from '@olegpolyakov/frontend/clients/ws';
+import { EventEmitter } from '@olegpolyakov/frontend/libs/events';
 
 export { ChatEvent, ChatState };
-
-class EventEmitter extends EventTarget {
-    private listeners = new Map<string, Map<object, EventListener>>();
-
-    emit<T>(eventName: string, data?: T) {
-        const event = new CustomEvent(eventName, { detail: data });
-        this.dispatchEvent(event);
-    }
-
-    on<T = unknown>(eventName: string, callback: (data: T) => void) {
-        const listener = (event: Event) => {
-            callback((event as CustomEvent<T>).detail);
-        };
-
-        let handlers = this.listeners.get(eventName);
-        if (!handlers) {
-            handlers = new Map<object, EventListener>();
-            this.listeners.set(eventName, handlers);
-        }
-
-        handlers.set(callback, listener);
-        this.addEventListener(eventName, listener);
-    }
-
-    off<T = unknown>(eventName: string, callback: (data: T) => void) {
-        const handlers = this.listeners.get(eventName);
-        const listener = handlers?.get(callback);
-
-        if (!listener || !handlers) return;
-
-        this.removeEventListener(eventName, listener);
-        handlers.delete(callback);
-
-        if (handlers.size === 0) {
-            this.listeners.delete(eventName);
-        }
-    }
-
-    clear() {
-        for (const [event, listeners] of this.listeners.entries()) {
-            for (const listener of listeners.values()) {
-                this.removeEventListener(event, listener);
-            }
-        }
-    }
-}
 
 export enum ChatConversationEvent {
     Created = 'conversation.created',
