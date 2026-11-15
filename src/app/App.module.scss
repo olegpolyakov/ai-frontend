@@ -3,13 +3,3 @@
     height: 100dvh;
     overflow: hidden;
 }
-
-.sidebar {
-    box-sizing: border-box;
-    max-width: 280px;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    gap: var(--ui-space-s);
-    padding: var(--ui-space-s);
-}

@@ -1,6 +1,6 @@
 import { Link, Route, Routes } from 'react-router-dom';
 
-import { Button, ButtonGroup, Flex, Heading, Scrollable } from '@olegpolyakov/ui';
+import { Button } from '@olegpolyakov/ui';
 import { AppContent, AppDrawer, AppShell } from '@olegpolyakov/frontend/app';
 import { useAuthContext } from '@olegpolyakov/frontend/features/auth';
 import { UploadProvider } from '@olegpolyakov/frontend/features/upload';
@@ -30,39 +30,24 @@ export default function App() {
                 apiUrl={API_URL}
                 wsUrl={WS_URL}
             >
-                <ModelsProvider>
-                    <IntegrationsProvider>
-                        <UploadProvider uploadUrl={UPLOAD_URL}>
+                <UploadProvider uploadUrl={UPLOAD_URL}>
+                    <ModelsProvider>
+                        <IntegrationsProvider>
                             <ChatProvider userId={userId}>
                                 <ConversationsProvider>
-                                    <AppDrawer scrollable={false}>
-                                        <Scrollable
-                                            className={styles.sidebar}
-                                            fade
-                                        >
-                                            <Flex
-                                                align="center"
-                                                justify="between"
-                                            >
-                                                <Heading
-                                                    content="AI"
-                                                />
-
-                                                <ButtonGroup>
-                                                    <Button
-                                                        as={Link}
-                                                        icon="quickreply"
-                                                        to="/"
-                                                        title="New quick response"
-                                                    />
+                                    <AppDrawer
+                                        actions={<>
+                                            <Button
+                                                as={Link}
+                                                icon="quickreply"
+                                                to="/"
+                                                title="New quick response"
+                                            />
                                                 
-                                                    <SettingsButton />
-                                                </ButtonGroup>
-                                            </Flex>
-                            
-                            
-                                            <ConversationsList />
-                                        </Scrollable>
+                                            <SettingsButton />
+                                        </>}
+                                    >
+                                        <ConversationsList />
                                     </AppDrawer>
                 
                                     <AppContent>
@@ -86,9 +71,9 @@ export default function App() {
                                     </AppContent>
                                 </ConversationsProvider>
                             </ChatProvider>
-                        </UploadProvider>
-                    </IntegrationsProvider>
-                </ModelsProvider>
+                        </IntegrationsProvider>
+                    </ModelsProvider>
+                </UploadProvider>
             </ApiProvider>
         </AppShell>
     );
