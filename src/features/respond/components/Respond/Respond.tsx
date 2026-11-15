@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from 'react';
 import { Button, Flex, Heading, Icon, State } from '@olegpolyakov/ui';
 import { type EntityRef, isEntityRef } from '@olegpolyakov/core/objects/ref';
 import { NIL, v4 as uuid } from '@olegpolyakov/core/utils/uuid';
+import { useAppContext } from '@olegpolyakov/frontend/app';
 import cn from '@olegpolyakov/frontend/helpers/classnames';
 import { useLocalStorage } from '@olegpolyakov/frontend/hooks/local-storage';
 
@@ -15,6 +16,7 @@ import useRespondApi from '../../hooks/useRespondApi';
 import styles from './Respond.module.scss';
 
 export default function Respond() {
+    const { openDrawer } = useAppContext();
     const api = useRespondApi();
 
     const [messages, setMessages] = useState<MessageData[]>([]);
@@ -75,7 +77,16 @@ export default function Respond() {
         <div className={cn(styles.root, messages.length === 0 && styles.empty)}>
             {messages.length > 0 &&
                 <header className={styles.header}>
-                    <Heading content="Quick Response" />
+                    <Heading
+                        start={
+                            <Button
+                                className={styles.menu}
+                                icon="menu"
+                                onClick={openDrawer}
+                            />
+                        }
+                        content="Quick Response"
+                    />
 
                     <Flex gap="xs">
                         {/* <Button
