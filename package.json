@@ -9,8 +9,8 @@
         "dev": "vite dev",
         "compile": "tsc --noEmit",
         "lint": "eslint ./src",
-        "preversion": "npm update --workspaces=false && npm run build && git add package-lock.json",
-        "postversion": "git push origin v$npm_package_version"
+        "preversion": "npm update --workspaces=false && npm run build",
+        "postversion": "git push --follow-tags"
     },
     "dependencies": {
         "@olegpolyakov/frontend": "^0.24.0",
@@ -23,6 +23,7 @@
         "@types/react": "^19.2.0",
         "@types/react-dom": "^19.2.0",
         "eslint": "^9.39.0",
-        "typescript": "^5.9.3"
+        "typescript": "^5.9.3",
+        "vitest": "^4.1.0"
     }
 }
