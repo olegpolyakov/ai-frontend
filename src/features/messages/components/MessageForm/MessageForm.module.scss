@@ -20,10 +20,12 @@
 .input {
     width: 100%;
     min-height: 1em;
+    max-height: 300px;
     margin: 0;
     outline: none;
     align-self: center;
     word-break: break-word;
+    overflow-y: auto;
     cursor: text;
 
     &:empty::before {

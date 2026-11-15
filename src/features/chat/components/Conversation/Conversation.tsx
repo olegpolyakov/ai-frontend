@@ -72,6 +72,7 @@ export default function Conversation() {
                         content={
                             <Editable
                                 content={conversation.title}
+                                overflow="ellipsis"
                                 onBlur={title => title !== conversation.title && updateConversation({ title })}
                             />
                         }
