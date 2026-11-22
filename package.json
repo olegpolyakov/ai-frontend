@@ -10,7 +10,7 @@
         "compile": "tsc --noEmit",
         "lint": "eslint ./src",
         "preversion": "npm update --workspaces=false && npm run build",
-        "postversion": "git push --follow-tags"
+        "postversion": "git push --follow-tags && rm -rf node_modules"
     },
     "dependencies": {
         "@olegpolyakov/frontend": "^0.24.0",
