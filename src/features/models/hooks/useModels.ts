@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import { useRequest } from '@olegpolyakov/frontend/hooks/request';
 
-import type ModelsApi from '../ModelsApi';
+import type { ModelsApi } from '../api';
 import type { Model } from '../types';
 
 export default function useModels(api: ModelsApi) {

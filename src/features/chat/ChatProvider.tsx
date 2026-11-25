@@ -14,7 +14,7 @@ export default function ChatProvider({
     children: React.ReactNode;
 }) {
     const api = useChatApi();
-    const { client, error, isConnected } = useChatClient();
+    const { client, error, isConnected } = useChatClient(api.events);
 
     const value = useMemo<ChatContextValue>(() => ({
         api,

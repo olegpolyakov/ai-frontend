@@ -1,9 +1,10 @@
 import {
-    WsClient,
     WsClientEvent as ChatEvent,
     WsClientStatus as ChatState
 } from '@olegpolyakov/frontend/clients/ws';
 import { EventEmitter } from '@olegpolyakov/frontend/libs/events';
+
+import type { ChatSocket } from './api';
 
 export { ChatEvent, ChatState };
 
@@ -20,12 +21,12 @@ export enum ChatMessageEvent {
 }
 
 export default class ChatClient extends EventEmitter {
-    private readonly ws: WsClient;
+    private readonly socket: ChatSocket;
 
-    constructor(ws: WsClient) {
+    constructor(socket: ChatSocket) {
         super();
 
-        this.ws = ws;
+        this.socket = socket;
 
         this.handleConnected = this.handleConnected.bind(this);
         this.handleDisconnected = this.handleDisconnected.bind(this);
@@ -34,7 +35,7 @@ export default class ChatClient extends EventEmitter {
     }
 
     get state(): ChatState {
-        return this.ws.status;
+        return this.socket.status;
     }
 
     get connected(): boolean {
@@ -51,7 +52,7 @@ export default class ChatClient extends EventEmitter {
         this.detachSocketListeners();
         this.attachSocketListeners();
 
-        this.ws.connect();
+        this.socket.connect();
     }
 
     disconnect(): void {
@@ -59,7 +60,7 @@ export default class ChatClient extends EventEmitter {
 
         if (this.disconnected) return;
 
-        this.ws.disconnect();
+        this.socket.disconnect();
     }
 
     reset(): void {
@@ -68,21 +69,21 @@ export default class ChatClient extends EventEmitter {
     }
 
     async sendMessage(conversationId: string, content: string): Promise<void> {
-        this.ws.send(JSON.stringify({ conversationId, content }));
+        this.socket.send(JSON.stringify({ conversationId, content }));
     }
 
     private attachSocketListeners() {
-        this.ws.on(ChatEvent.Connected, this.handleConnected);
-        this.ws.on(ChatEvent.Disconnected, this.handleDisconnected);
-        this.ws.on(ChatEvent.Message, this.handleMessage);
-        this.ws.on(ChatEvent.Error, this.handleError);
+        this.socket.addEventListener(ChatEvent.Connected, this.handleConnected);
+        this.socket.addEventListener(ChatEvent.Disconnected, this.handleDisconnected);
+        this.socket.addEventListener(ChatEvent.Message, this.handleMessage);
+        this.socket.addEventListener(ChatEvent.Error, this.handleError);
     }
 
     private detachSocketListeners() {
-        this.ws.off(ChatEvent.Connected, this.handleConnected);
-        this.ws.off(ChatEvent.Disconnected, this.handleDisconnected);
-        this.ws.off(ChatEvent.Message, this.handleMessage);
-        this.ws.off(ChatEvent.Error, this.handleError);
+        this.socket.removeEventListener(ChatEvent.Connected, this.handleConnected);
+        this.socket.removeEventListener(ChatEvent.Disconnected, this.handleDisconnected);
+        this.socket.removeEventListener(ChatEvent.Message, this.handleMessage);
+        this.socket.removeEventListener(ChatEvent.Error, this.handleError);
     }
 
     private handleConnected() {

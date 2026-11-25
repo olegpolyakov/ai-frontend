@@ -1,11 +1,10 @@
-import { useMemo } from 'react';
+import { useAuthContext } from '@olegpolyakov/frontend/features/auth';
+import { useApiFactory } from '@olegpolyakov/frontend/services/api';
 
-import { HttpClient } from '@olegpolyakov/frontend/clients/http';
+import { localApi, remoteApi } from '../api';
 
-import MemoriesApi from '../MemoriesApi';
+export default function useMemoriesApi() {
+    const { isGuest } = useAuthContext();
 
-export default function useMemoriesApi(apiUrl: string, accessToken: string) {
-    return useMemo(() => new MemoriesApi(
-        new HttpClient(apiUrl, { accessToken })
-    ), [apiUrl, accessToken]);
+    return useApiFactory(isGuest ? localApi : remoteApi);
 }

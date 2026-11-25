@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { useRequest } from '@olegpolyakov/frontend/hooks/request';
 
-import type IntegrationsApi from '../IntegrationsApi';
+import type { IntegrationsApi } from '../api';
 import type { Integration } from '../types';
 
 export default function useIntegrations(api: IntegrationsApi) {
@@ -36,7 +36,7 @@ export default function useIntegrations(api: IntegrationsApi) {
     }, [api]);
     
     const deleteIntegration = useCallback(async (id: string): Promise<Integration> =>  {
-        const integration = await api.deleteIntegration(`/integrations/${id}`);
+        const integration = await api.deleteIntegration(id);
 
         setIntegrations(integrations => integrations.filter(i => i.id !== integration.id));
 

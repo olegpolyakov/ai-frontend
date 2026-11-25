@@ -1,11 +1,10 @@
-import { useMemo } from 'react';
+import { useAuthContext } from '@olegpolyakov/frontend/features/auth';
+import { useApiFactory } from '@olegpolyakov/frontend/services/api';
 
-import { useApiContext } from '@olegpolyakov/frontend/services/api';
+import { localApi, remoteApi } from '../api';
 
-import IntegraionsApi from '../IntegrationsApi';
+export default function useIntegrationsApi() {
+    const { isGuest } = useAuthContext();
 
-export default function useIntegraionsApi() {
-    const { http } = useApiContext();
-
-    return useMemo(() => new IntegraionsApi(http), [http]);
+    return useApiFactory(isGuest ? localApi : remoteApi);
 }

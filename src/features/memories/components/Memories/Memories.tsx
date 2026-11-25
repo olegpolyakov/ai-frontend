@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import { Button, List } from '@olegpolyakov/ui';
-import { useAuthContext } from '@olegpolyakov/frontend/features/auth';
-
-import { API_URL } from '@/env';
 
 import useMemoriesApi from '../../hooks/useMemoriesApi';
 import type { Memory } from '../../types';
@@ -18,8 +15,7 @@ const icons = {
 };
 
 export default function Memories() {
-    const { accessToken } = useAuthContext();
-    const api = useMemoriesApi(API_URL, accessToken);
+    const api = useMemoriesApi();
 
     const [memories, setMemories] = useState<Memory[]>([]);
 

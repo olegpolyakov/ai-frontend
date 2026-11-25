@@ -1,11 +1,10 @@
-import { useMemo } from 'react';
+import { useAuthContext } from '@olegpolyakov/frontend/features/auth';
+import { useApiFactory } from '@olegpolyakov/frontend/services/api';
 
-import { useApiContext } from '@olegpolyakov/frontend/services/api';
-
-import RespondApi from '../RespondApi';
+import { localApi, remoteApi } from '../api';
 
 export default function useRespondApi() {
-    const { http } = useApiContext();
+    const { isGuest } = useAuthContext();
 
-    return useMemo(() => new RespondApi(http), [http]);
+    return useApiFactory(isGuest ? localApi : remoteApi);
 }

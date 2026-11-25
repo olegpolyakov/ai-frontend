@@ -1,20 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { useApiContext } from '@olegpolyakov/frontend/services/api';
-
+import type { ChatSocket } from '../api';
 import ChatClient, { ChatEvent, ChatState } from '../ChatClient';
 
-export default function useChatClient() {
-    const { ws } = useApiContext();
-
-    const clientRef = useRef(new ChatClient(ws));
+export default function useChatClient(socket: ChatSocket) {
+    const client = useMemo(() => new ChatClient(socket), [socket]);
     
     const [state, setState] = useState<ChatState>(ChatState.Disconnected);
     const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
-        const client = clientRef.current;
-
         if (client.connected) {
             client.reset();
         }
@@ -36,12 +31,10 @@ export default function useChatClient() {
             
             client.disconnect();
         };
-    }, [ws]);
+    }, [client]);
 
     return {
-        get client() {
-            return clientRef.current;
-        },
+        client,
         state,
         error,
         isConnected: state === 'connected',
